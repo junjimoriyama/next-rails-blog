@@ -1,0 +1,47 @@
+source "https://rubygems.org"
+
+# Rails 7.2.1を使用
+gem "rails", "~> 7.2.1", ">= 7.2.1.1"
+
+# Active RecordのデータベースにMySQLを使用
+gem "mysql2", "~> 0.5"
+
+# Pumaウェブサーバーを使用
+gem "puma", ">= 5.0"
+
+# JSON APIを簡単に作成するためのjbuilderを使用（コメントアウト）
+# gem "jbuilder"
+
+# Redisアダプターを使用して、Action Cableを本番環境で実行（コメントアウト）
+# gem "redis", ">= 4.0.1"
+
+# Redisで高レベルのデータ型を扱うためにKredisを使用（コメントアウト）
+# gem "kredis"
+
+# Active Modelでhas_secure_passwordを使用（コメントアウト）
+# gem "bcrypt", "~> 3.1.7"
+
+# Windowsにはzoneinfoファイルが含まれていないため、tzinfo-dataをバンドル
+gem "tzinfo-data", platforms: %i[ windows jruby ]
+
+# bootsnapで起動時間を短縮（config/boot.rbで必要）
+gem "bootsnap", require: false
+
+# Active Storageで画像を変換するためのgem（コメントアウト）
+# gem "image_processing", "~> 1.2"
+
+# Cross-Origin Resource Sharing（CORS）を処理するためにRack CORSを使用（コメントアウト）
+# gem "rack-cors"
+
+group :development, :test do
+  # デバッグ用gem
+  gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
+
+  # セキュリティ脆弱性の静的解析ツール
+  gem "brakeman", require: false
+
+  # OmakaseのRubyスタイルを適用
+  gem "rubocop-rails-omakase", require: false
+end
+
+

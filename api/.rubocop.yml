@@ -1,0 +1,10 @@
+# Rubyのコードスタイルとコード品質を自動でチェックし、改善点を提案してくれる静的解析ツール
+
+# Omakase Ruby styling for Rails
+inherit_gem: { rubocop-rails-omakase: rubocop.yml }
+
+# Overwrite or add rules to create your own house style
+#
+# # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
+# Layout/SpaceInsideArrayLiteralBrackets:
+#   Enabled: false
