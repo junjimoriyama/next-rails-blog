@@ -8,6 +8,7 @@ export const createPost = async(formData: FormData) => {
   const content = formData.get('content')
   const category = formData.get('category')
 
+
   const res = await fetch("http://api:3000/api/v1/posts",{
     method: 'POST',
     headers: {

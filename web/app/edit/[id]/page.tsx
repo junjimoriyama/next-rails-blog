@@ -1,10 +1,11 @@
 "use client";
 
-import { CategoryProps } from "@/types";
+import { CategoryProps, editPostData } from "@/types";
 import { useEffect, useState } from "react";
 import { editPost } from "./actionEdit";
 import { useParams } from "next/navigation";
 import "./edit.scss";
+import Link from "next/link";
 
 // import { createPost } from "./actionEdit";
 
@@ -13,26 +14,38 @@ export default function EditPost() {
 
   const [ title, setTitle ] = useState('')
   const [ content, setContent ] = useState('')
-  const [ category, setCategory ] = useState('')
+  const [categoryData, setCategoryData] = useState<number>(0);  
   const [ categories, setCategories ] = useState([])
 
-  const { id } = useParams();
-  console.log(id)
+  // 編集投稿
+  // const [ editPostData, setEditPostData  ] = useState<editPostData>({ 
+  //   title: '',
+  //   content: '',
+  //   category_id: '',
+  // })
+
+  // id取得
+  const { id } = useParams()
 
   useEffect(() => {
-  }, [])
-  
-  useEffect(() => {
     const getPosts = async() => {
-      const res = await fetch("http://localhost:3000/api/v1/posts", {
+      const res = await fetch(`http://localhost:3000/api/v1/posts/${id}`, {
       });
       const data = await res.json()
-      console.log(data)
-    
+      setTitle(data.title)
+      setContent(data.content)
+      setCategoryData(data.category_id)
     }
     getPosts()
+
+    const getCategories = async() => {
+      const res = await  fetch(`http://localhost:3000/api/v1/categories/`, {
+      });
+      const data = await res.json()
+      setCategories(data)
+    }
+    getCategories()
   }, [])
-  
 
   return (
     <div className="edit">
@@ -40,6 +53,7 @@ export default function EditPost() {
       <form
       action={editPost}
       >
+        <input type="hidden" name="id" value={id} />
         <label>タイトル:</label>
         <input
           className="titleInput"
@@ -54,7 +68,7 @@ export default function EditPost() {
         onChange={(e) => setContent(e.target.value)}
         // onChange={handleContentChange} 
         name='content'
-        value={content} 
+        value={content}
         />
 
         <label>カテゴリー:</label>
@@ -64,12 +78,12 @@ export default function EditPost() {
               <div className="eachCategory" key={category.id}>
                 <input
                   type="radio"
-                  value={category.id}
-                  id={category.id}
-                  name="category"
+                  id={String(category.id)}
+                  name="categoryData"
+                  value={categoryData}
+                  checked={category.id === Number(categoryData)}
                   onChange={(e) => {
-                    setCategory(e.target.value)
-                    console.log(e.target.value)
+                    setCategoryData(Number(e.target.id))
                   }}
                 />
                 <label>{category.name}</label>
@@ -81,6 +95,11 @@ export default function EditPost() {
           送信
         </button>
       </form>
+      <Link href='/'>
+      <button className="backTopBtn">
+        戻る
+      </button>
+      </Link>
     </div>
   );
 }

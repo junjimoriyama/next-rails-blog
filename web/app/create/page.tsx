@@ -5,6 +5,7 @@ import { createPost } from "./actionCreate";
 import { CategoryProps } from "@/types";
 import { useEffect, useState } from "react";
 import "./create.scss";
+import { useParams } from "next/navigation";
 
 export default function CreatePost() {
 
@@ -12,6 +13,9 @@ export default function CreatePost() {
   const [ content, setContent ] = useState('')
   const [ category, setCategory ] = useState('')
   const [ categories, setCategories ] = useState([])
+
+  const { id } = useParams()
+
 
   useEffect(() => {
     const getCategories = async() => {
@@ -57,11 +61,10 @@ export default function CreatePost() {
                 <input
                   type="radio"
                   value={category.id}
-                  id={category.id}
+                  id={String(category.id)}
                   name="category"
                   onChange={(e) => {
                     setCategory(e.target.value)
-                    console.log(e.target.value)
                   }}
                 />
                 <label>{category.name}</label>
