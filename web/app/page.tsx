@@ -1,10 +1,11 @@
-import BlogList from "@/features/posts/components/BlogList";
+import  { PostList } from "@/features/posts/components/postList/PostList";
+import "./home.scss"
 
 
 export default function Home() {
   return (
-    <>
-    <BlogList />
-    </>
+    <div className="home">
+    <PostList />
+    </div>
   );
 }

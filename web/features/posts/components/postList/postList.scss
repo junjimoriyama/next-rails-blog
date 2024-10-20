@@ -1,0 +1,75 @@
+.heading {
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+.createBtn {
+  display: grid;
+  place-items: center;
+  width: 600px;
+  height: 30px;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: rgb(33, 135, 86);
+  margin-bottom: 10px;
+}
+.posts {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  .postList {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    .postItem {
+      display: flex;
+      flex-direction: column;
+      width: 600px;
+      padding: 10px;
+      border: 1px solid #fff;
+      .title {
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+      .content {
+        margin-bottom: 20px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box; /* ボックスレイアウトを使う */
+        -webkit-line-clamp: 2; /* 表示する行数を指定 */
+        -webkit-box-orient: vertical; /* 垂直方向にボックスを配置 */
+        white-space: normal; 
+        &:last-of-type {
+          margin-bottom: 0;
+        }
+      }
+      .categories {
+        // height: 20px;
+      }
+      .btns {
+        display: flex;
+        justify-content: flex-end;
+        gap: 5px;
+        .editBtn,
+        .deleteBtn {
+          display: grid;
+          place-items: center;
+          width: 50px;
+          height: 30px;
+          padding: 5px;
+          border-radius: 5px;
+        }
+        .editBtn {
+          background-color: rgb(33, 33, 135);
+        }
+        .deleteBtn {
+          background-color: rgb(174, 45, 45);
+        }
+      }
+    }
+  }
+}
