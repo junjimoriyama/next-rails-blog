@@ -17,13 +17,6 @@ export default function EditPost() {
   const [categoryData, setCategoryData] = useState<number>(0);  
   const [ categories, setCategories ] = useState([])
 
-  // 編集投稿
-  // const [ editPostData, setEditPostData  ] = useState<editPostData>({ 
-  //   title: '',
-  //   content: '',
-  //   category_id: '',
-  // })
-
   // id取得
   const { id } = useParams()
 
