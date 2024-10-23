@@ -1,17 +1,39 @@
+'use client'; // クライアントコンポーネントとして指定
 
 import { postProps } from "@/types";
 import Link from "next/link";
-// style
 import "./postList.scss";
 import DeleteBtn from "./crudBtns/DeleteBtn";
+import { useEffect, useState } from "react";
 
+export const PostList = () => {
+  const [posts, setPosts] = useState<postProps[]>([]);
 
-export const PostList =  async() => {
+  useEffect(() => {
+    // ローカルストレージからトークンを取得
+    const token = localStorage.getItem('token');
 
-  const res = await fetch("http://api:3000/api/v1/posts", {
-    cache: "no-store",
-  });
-  const posts = await res.json();
+    const fetchPosts = async () => {
+      const res = await fetch("http://localhost:3000/api/v1/posts", {
+        method: 'GET',
+        headers: {
+          // "Authorization": `Bearer ${token}`,  // Authorizationヘッダーにトークンを追加
+          "Content-Type": "application/json"
+        },
+        cache: "no-store",
+        credentials: 'include'
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        setPosts(data);
+      } else {
+        console.error('投稿の取得に失敗しました');
+      }
+    };
+
+    fetchPosts();
+  }, []);
 
   return (
     <div className="posts">
@@ -57,44 +79,21 @@ export default PostList;
 
 
 
+
+// import { postProps } from "@/types";
 // import Link from "next/link";
-// import { PostsProps } from "../types";
 // // style
-// import "./posts.scss";
-// import { DeleteBtn } from "./DeleteBtn";
-// import { useEffect } from "react";
-// import axios from "axios";
-// import { Favorite } from "./favorite/Favorite";
+// import "./postList.scss";
+// import DeleteBtn from "./crudBtns/DeleteBtn";
 
-// export async function Posts() {
 
-//   const res = await fetch("http://localhost:3001/api/v1/posts", {
-//     // next: { revalidate: 60 * 60 * 24 },
+// export const PostList =  async() => {
+
+//   const res = await fetch("http://api:3000/api/v1/posts", {
 //     cache: "no-store",
+//     credentials: 'include'
 //   });
 //   const posts = await res.json();
-
-//   try {
-//     const sessionRes = await fetch("http://localhost:3001/api/v1/user/logged_in", {
-//       credentials: "include",
-//       method: 'GET',
-//       redirect: "manual" 
-//     })
-//      // fetch の結果である res オブジェクトを使ってヘッダーを確認する
-//   console.log(sessionRes.headers.get('X-Session-ID')); // ヘッダーの確認
-//   console.log(Array.from(sessionRes.headers.entries()));
-
-//     // const sessionRes = await axios.get("http://localhost:3001/api/v1/user/logged_in", {
-//     //   withCredentials: true,
-//     // });
-    
-//     const sessionData = await sessionRes.json();
-//     console.log(sessionData); // sessionRes全体を表示してみる
-
-  
-//   } catch (error) {
-//     console.error("Error fetching session data:", error);
-//   }
 
 //   return (
 //     <div className="posts">
@@ -105,33 +104,23 @@ export default PostList;
 //         </Link>
 //       </div>
 //       <ul className="postList">
-//         {posts.map((post: PostsProps) => (
+//         {posts.map((post: postProps) => (
 //           <li key={post.id} className="postItem">
 //             <Link href={`posts/${post.id}`}>
 //               <h2 className="title">{`${post.title}`}</h2>
 //             </Link>
 //             <p className="content">{`${post.content}`}</p>
 //             <p className="categories">
-//               <span>カテゴリー：</span>
-//               {Array.isArray(post.categories)
-//                 ? post.categories.join(",")
-//                 : JSON.parse(post.categories).join(",")}
+//               <span>カテゴリー：{post.category.name}</span>
 //             </p>
-//             <Favorite
-//             postId={Number(post.id)}
-//             />
+//             <p className="date">
+//               <span>投稿日：{new Date(post.created_at).toLocaleDateString('ja-JP')}</span>
+//             </p>
 //             <div className="btns">
 //               <Link href={`edit/${post.id}`}>
 //                 <button className="editBtn">編集</button>
 //               </Link>
-
 //               <DeleteBtn id={post.id} />
-//               {/* <button
-//                 className="deleteBtn"
-//                 // onClick={() => handleDelete(post.id)}
-//               >
-//                 削除
-//               </button> */}
 //             </div>
 //           </li>
 //         ))}
@@ -144,4 +133,6 @@ export default PostList;
 //       </Link>
 //     </div>
 //   );
-// }
+// };
+
+// export default PostList;

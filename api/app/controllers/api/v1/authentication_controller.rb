@@ -1,4 +1,5 @@
 class Api::V1::AuthenticationController < ApplicationController
+  before_action :authenticate_user, only: [:authenticate]  # 認証が必要なアクションに適用
 
   # ログイン時の認証
   def login
@@ -9,6 +10,10 @@ class Api::V1::AuthenticationController < ApplicationController
       render json: { message: '存在しません' }, status: :unauthorized
     else
       token = create_token(@user.id)
+
+      # クッキーにトークンを設定
+      # cookies.signed[:jwt] = { value: token, httponly: true, secure: Rails.env.production? }
+
       render json: { email: @user.email, token: token }, status: :ok
     end
   end
@@ -28,7 +33,7 @@ class Api::V1::AuthenticationController < ApplicationController
       @current_user = User.find(decode_token[0]['user_id'])
 
       Rails.logger.info "Current User: #{@current_user.inspect}"
-      
+
     rescue ActiveRecord::RecordNotFound
       render_unauthorized
     rescue JWT::DecodeError
