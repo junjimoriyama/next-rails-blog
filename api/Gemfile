@@ -19,7 +19,7 @@ gem "puma", ">= 5.0"
 # gem "kredis"
 
 # Active Modelでhas_secure_passwordを使用（コメントアウト）
-# gem "bcrypt", "~> 3.1.7"
+gem "bcrypt", "~> 3.1.7"
 
 # Windowsにはzoneinfoファイルが含まれていないため、tzinfo-dataをバンドル
 gem "tzinfo-data", platforms: %i[ windows jruby ]
@@ -32,6 +32,9 @@ gem "bootsnap", require: false
 
 # Cross-Origin Resource Sharing（CORS）を処理するためにRack CORSを使用（コメントアウト）
 gem "rack-cors"
+
+# jwt
+gem "jwt"
 
 group :development, :test do
   # デバッグ用gem

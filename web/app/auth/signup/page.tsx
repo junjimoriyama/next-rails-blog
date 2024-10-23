@@ -1,6 +1,6 @@
 "use client";
 
-import { loginUser } from "./actionSignup";
+import { signupUser } from "./actionSignup";
 import "./signup.scss";
 
 import React, { ChangeEvent, useState } from "react";
@@ -11,18 +11,18 @@ const login = () => {
   const [ password, setPassword ] = useState('')
   const [ passwordConf, setPasswordConf  ] = useState('')
 
-  console.log(email)
-
   return (
     <div className="login">
-      <h1>ログイン</h1>
-      <form action={loginUser}>
+      <h1>サインイン</h1>
+      <form action={signupUser}>
         <label htmlFor="email">
           メールアドレス
           <input 
           className="email" 
           type="email" 
           id="email" 
+          name="email"
+          value={email}
           onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
           />
         </label>
@@ -32,6 +32,8 @@ const login = () => {
         className="password" 
         type="password" 
         id="password" 
+        name="password"
+        value={password}
         onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
         />
         </label>
@@ -40,9 +42,11 @@ const login = () => {
           <input 
           className="passwordConf" 
           type="password" 
-          id="passwordConf"
+          id="passwordConf" 
+          name="passwordConf"
+          value={passwordConf}
           // autoComplete="new-password"
-          onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setPasswordConf(e.target.value)}
           />
         </label>
 

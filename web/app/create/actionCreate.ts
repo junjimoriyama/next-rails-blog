@@ -14,10 +14,12 @@ export const createPost = async(formData: FormData) => {
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify( {
-      title: title,
-      content: content,
-      category_id: category
+    body: JSON.stringify({
+      post: {
+        title: title,
+        content: content,
+        category_id: category
+      }
     })
   })
   if(res.ok) {
