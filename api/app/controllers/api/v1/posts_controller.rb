@@ -1,4 +1,7 @@
 class Api::V1::PostsController < ApplicationController
+
+  before_action :authenticate, only: [:show, :create]  
+  
   def index
     @posts = Post.includes(:category).all
     render json: @posts.as_json(include: { category: { only: [:name] } })

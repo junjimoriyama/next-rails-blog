@@ -1,5 +1,5 @@
 class Api::V1::AuthenticationController < ApplicationController
-  before_action :authenticate_user, only: [:authenticate]  # 認証が必要なアクションに適用
+  before_action :authenticate, only: [:authenticate]  # 認証が必要なアクションに適用
 
   # ログイン時の認証
   def login
@@ -12,41 +12,16 @@ class Api::V1::AuthenticationController < ApplicationController
       token = create_token(@user.id)
 
       # クッキーにトークンを設定
-      # cookies.signed[:jwt] = { value: token, httponly: true, secure: Rails.env.production? }
+      cookies.signed[:jwt] = { value: token, httponly: true, secure: false, same_site: :lax }
+
+      # クッキーの内容をログに出力
+      Rails.logger.info "JWTクッキーに保存された値: #{cookies.signed[:jwt]}"
 
       render json: { email: @user.email, token: token }, status: :ok
     end
   end
 
-  def authenticate
-    authentication_header = request.headers[:authorization]
-    if !authentication_header
-      render_unauthorized
-    else
-      token = authentication_header.split(' ')[1]  
-      secret_key = Rails.application.credentials.secret_key_base
-    end
-
-    begin
-      decode_token = JWT.decode(token, secret_key)
-      # decode_token[0]はpayload。['user_id'] に修正
-      @current_user = User.find(decode_token[0]['user_id'])
-
-      Rails.logger.info "Current User: #{@current_user.inspect}"
-
-    rescue ActiveRecord::RecordNotFound
-      render_unauthorized
-    rescue JWT::DecodeError
-      render_unauthorized
-    end
-  end
-
-  def render_unauthorized
-    render json: { message: 'アクセス許可されていない' }, status: :unauthorized
-  end
-
   private
-
   def create_token(user_id)
     payload = { user_id: user_id }
     secret_key = Rails.application.credentials.secret_key_base
