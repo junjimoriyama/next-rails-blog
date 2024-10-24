@@ -1,6 +1,7 @@
 class Api::V1::PostsController < ApplicationController
 
   before_action :authenticate, only: [:show, :create]  
+  # before_action :authenticate # 全アクションに適用
   
   def index
     @posts = Post.includes(:category).all

@@ -2,11 +2,16 @@ class ApplicationController < ActionController::API
   include ActionController::Cookies
 
   def authenticate
-    # token = cookies.signed[:jwt] 
-    authentication_header = request.headers[:authorization]
-    # if token.nil?
-    if !authentication_header
+    Rails.logger.info "authenticate メソッドが呼び出されました"
+    token = cookies.signed[:jwt] 
+    # authentication_header = request.headers[:authorization]
+    # デバッグ用に authentication_header の内容をログに出力
+    Rails.logger.info "Authorizationヘッダーの内容: #{authentication_header}"
+
+    if token.nil?
+    # if !authentication_header
       render_unauthorized
+      return
     else
       token = authentication_header.split(' ')[1]  
       secret_key = Rails.application.credentials.secret_key_base
@@ -32,3 +37,4 @@ class ApplicationController < ActionController::API
 
 end
 
+ 

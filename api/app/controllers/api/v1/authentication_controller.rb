@@ -1,5 +1,5 @@
 class Api::V1::AuthenticationController < ApplicationController
-  before_action :authenticate, only: [:authenticate]  # 認証が必要なアクションに適用
+  # before_action :authenticate, only: [:authenticate]  # 認証が必要なアクションに適用
 
   # ログイン時の認証
   def login
@@ -32,6 +32,52 @@ end
 # ユーザーがログインを試みると、サーバーはユーザーを検索し、認証が成功すれば JWT トークンを発行します。
 # クライアントはこのトークンを保存し、次のリクエストで Authorization ヘッダーにトークンを含めて送信します。
 # サーバーは受け取ったトークンを検証し、正しいトークンならユーザーを認証します。
+
+# class Api::V1::AuthenticationController < ApplicationController
+#   # ログイン時の認証
+#   def login
+#     @user = User.find_by(email: params[:user][:email])
+    
+#     if @user.nil?
+#       render json: { message: '一致しません' }, status: :not_found
+#     elsif !@user&.authenticate(params[:user][:password])  # パスワード一致確認
+#       render json: { message: '存在しません' }, status: :unauthorized
+#     else
+#       token = create_token(@user.id)
+
+#       # クッキーにトークンを設定
+#       cookies.signed[:jwt] = cookie_token(token)
+
+#       # クッキーの内容をログに出力
+#       Rails.logger.info "JWTクッキーに保存された値: #{cookies.signed[:jwt]}"
+
+#       render json: { email: @user.email, token: token }, status: :ok
+#     end
+#   end
+
+#   private
+
+#   # トークンを作成するメソッド
+#   def create_token(user_id)
+#     payload = { user_id: user_id }
+#     secret_key = Rails.application.credentials.secret_key_base
+#     JWT.encode(payload, secret_key)
+#   end
+
+#   # クッキーに保存するトークン設定
+#   def cookie_token(token)
+#     decoded_token = JWT.decode(token, Rails.application.credentials.secret_key_base, true, { algorithm: 'HS256' })
+#     exp = decoded_token[0]["exp"] # トークンの有効期限
+
+#     {
+#       value: token,
+#       expires: Time.at(exp),
+#       secure: Rails.env.production?,
+#       http_only: true,
+#       same_site: :lax
+#     }
+#   end
+# end
 
 
 
