@@ -1,39 +1,26 @@
-'use client'; // クライアントコンポーネントとして指定
-
 import { postProps } from "@/types";
 import Link from "next/link";
+// style
 import "./postList.scss";
-import DeleteBtn from "./crudBtns/DeleteBtn";
-import { useEffect, useState } from "react";
+import DeleteBtn from "@/features/posts/components/postList/crudBtns/DeleteBtn";
+import { cookies } from "next/headers";
 
-export const PostList = () => {
-  const [posts, setPosts] = useState<postProps[]>([]);
+export const PostList = async () => {
+  const cookieStore = cookies();
+  const token = cookieStore.get("token");
+  console.log(token)
 
-  useEffect(() => {
-    // ローカルストレージからトークンを取得
-    const token = localStorage.getItem('token');
-
-    const fetchPosts = async () => {
-      const res = await fetch("http://localhost:3000/api/v1/posts", {
-        method: 'GET',
-        headers: {
-          // "Authorization": `Bearer ${token}`,  // Authorizationヘッダーにトークンを追加
-          "Content-Type": "application/json"
-        },
-        cache: "no-store",
-        credentials: 'include'
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-        setPosts(data);
-      } else {
-        console.error('投稿の取得に失敗しました');
-      }
-    };
-
-    fetchPosts();
-  }, []);
+  const res = await fetch("http://api:3000/api/v1/posts", {
+    method: "GET",
+    headers: {
+      "Authorization": `Bearer ${token?.value}`, // Authorizationヘッダーにトークンを追加
+      "Content-Type": "application/json",
+    },
+    cache: "no-store",
+    credentials: "include",
+  });
+  // ポストのデータ
+  const posts = await res.json();
 
   return (
     <div className="posts">
@@ -54,7 +41,9 @@ export const PostList = () => {
               <span>カテゴリー：{post.category.name}</span>
             </p>
             <p className="date">
-              <span>投稿日：{new Date(post.created_at).toLocaleDateString('ja-JP')}</span>
+              <span>
+                投稿日：{new Date(post.created_at).toLocaleDateString("ja-JP")}
+              </span>
             </p>
             <div className="btns">
               <Link href={`edit/${post.id}`}>
@@ -77,23 +66,57 @@ export const PostList = () => {
 
 export default PostList;
 
-
-
+// 'use client'; // クライアントコンポーネントとして指定
 
 // import { postProps } from "@/types";
 // import Link from "next/link";
-// // style
 // import "./postList.scss";
-// import DeleteBtn from "./crudBtns/DeleteBtn";
+// import { useEffect, useState } from "react";
+// import { cookies } from 'next/headers'
+// import DeleteBtn from "@/features/posts/components/postList/crudBtns/DeleteBtn";
 
+// export const PostList = () => {
+//   const [posts, setPosts] = useState<postProps[]>([]);
 
-// export const PostList =  async() => {
+//   useEffect(() => {
+// クッキーからトークンを取得
+// const getCookie = (name: string) => {
+//   const value = `; ${document.cookie}`;
+//   console.log(value)
+//   const parts = value.split(`; ${name}=`);
+//   if (parts.length === 2) return parts.pop()?.split(';').shift();
+// };
 
-//   const res = await fetch("http://api:3000/api/v1/posts", {
-//     cache: "no-store",
-//     credentials: 'include'
-//   });
-//   const posts = await res.json();
+// const token = getCookie('jwt');  // JWT トークンをクッキーから取得
+// if (!token) {
+//   console.error("トークンがありません。ログインが必要です。");
+//   return;
+// }
+// const token = localStorage.getItem('token')
+// console.log(token)
+
+//     const fetchPosts = async () => {
+
+//       const res = await fetch("http://localhost:3000/api/v1/posts", {
+//         method: 'GET',
+//         headers: {
+//           "Authorization": `Bearer ${token}`,  // Authorizationヘッダーにトークンを追加
+//           "Content-Type": "application/json"
+//         },
+//         cache: "no-store",
+//         credentials: 'include'
+//       });
+
+//       if (res.ok) {
+//         const data = await res.json();
+//         setPosts(data);
+//       } else {
+//         console.error('投稿の取得に失敗しました');
+//       }
+//     };
+
+//     fetchPosts();
+//   }, []);
 
 //   return (
 //     <div className="posts">

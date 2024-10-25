@@ -25,6 +25,7 @@ export default function EditPost() {
       const res = await fetch(`http://localhost:3000/api/v1/posts/${id}`, {
       });
       const data = await res.json()
+      console.log(data)
       setTitle(data.title)
       setContent(data.content)
       setCategoryData(data.category_id)
