@@ -31,8 +31,7 @@ export const loginUser = async (formData: FormData) => {
     })
     redirect('/posts');
   } else {
-    const errorData = await res.json()
-    throw new Error('ログインできません', errorData)
+    redirect('/auth/signup');
   }
 }
 

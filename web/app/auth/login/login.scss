@@ -29,16 +29,37 @@
     }
   }
 
-  .signUpBtn {
+  .loginBtn {
     width: 300px;
     height: 30px;
     background-color: navy;
     border-radius: 5px;
     font-size: 20px;
     transition: .3s;
+    margin-bottom: 20px;
 
     &:hover {
       opacity: 0.7;
+    }
+  }
+
+  .promptSignup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    h3 {
+      margin-bottom: 10px;
+    }
+    .signupBtn {
+      width: 300px;
+      height: 30px;
+      background-color: #fff;
+      color: #000;
+      border-radius: 5px;
+      font-size: 20px;
+      transition: .3s;
+      margin-bottom: 20px;
     }
   }
 }

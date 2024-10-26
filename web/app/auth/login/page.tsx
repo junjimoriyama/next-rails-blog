@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { loginUser } from "./actionLogin";
 import "./login.scss";
 
@@ -36,8 +37,15 @@ const login = () => {
         onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
         />
         </label>
-        <button className="signUpBtn" type='submit'>送信</button>
+        <button className="loginBtn" type='submit'>送信</button>
       </form>
+
+      <div className="promptSignup">
+      <h3>登録まだの方はこちら</h3>
+      <Link href={"/auth/signup"}>
+        <button className="signupBtn">登録</button>
+      </Link>
+      </div>
     </div>
   );
 };

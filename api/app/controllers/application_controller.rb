@@ -6,11 +6,8 @@ class ApplicationController < ActionController::API
     payload = { user_id: user_id }
     # Railsのcredentialsからシークレットキーを取得
     secret_key = Rails.application.credentials.secret_key_base
-    Rails.logger.info "create_token関数のsecret_keyは: #{secret_key}"
     # ペイロードとシークレットキーを使ってJWTトークンを生成し、token変数に格納
     token = JWT.encode(payload, secret_key)
-    # 生成されたトークンをログに出力（デバッグ用）
-    Rails.logger.info "create_token関数のtokenは: #{token}"
     # 生成されたトークンを呼び出し元に返す
     return token
   end
@@ -20,9 +17,6 @@ class ApplicationController < ActionController::API
     # Rails.logger.info "authenticateのtokenは: #{token}"
     # token = cookies.signed[:jwt] 
     authentication_header = request.headers[:authorization]
-    # デバッグ用に authentication_header の内容をログに出力
-    Rails.logger.info "Authorizationヘッダーの内容: #{authentication_header}"
-
     # if token.nil?
     # Authorizationヘッダーが存在しない場合のチェック
     if !authentication_header
@@ -66,3 +60,9 @@ class ApplicationController < ActionController::API
   end
 
 end
+
+# プロセスの流れ
+# ユーザーがログインすると、サーバーはJWTトークンを生成し、それをフロントエンドに返します。
+# フロントエンドはそのトークンをクッキーに保存します（cookieStore.set で）。
+# 次回以降、リクエストを送信する際、ブラウザは保存していたクッキーのトークンを使い、そのトークンをAuthorizationヘッダーにセットして、サーバーに送信します。
+# サーバーはそのAuthorizationヘッダーを使ってトークンを検証し、ユーザーが認証済みかどうかを確認します。

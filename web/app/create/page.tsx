@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import "./create.scss";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import { getCookie } from "../components/functions/getCookies";
 
 export default function CreatePost() {
   const [title, setTitle] = useState("");
@@ -18,22 +19,12 @@ export default function CreatePost() {
 
   const router = useRouter();
 
-  // useEffect(() => {
-
-  const getCookie = (name: string) => {
-    const value = `; ${document.cookie}`;
-    console.log(value);
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop()?.split(";").shift();
-  };
-
   const createPost = async () => {
     const token = getCookie("token");
-    console.log("token", token);
     const res = await fetch("http://localhost:3000/api/v1/posts", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        'Authorization': `Bearer ${token}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({

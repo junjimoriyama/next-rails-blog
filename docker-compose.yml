@@ -10,6 +10,7 @@ services:
       MYSQL_PASSWORD: password
     ports:
       - 4306:4306
+      # データを永続的に残す
     volumes:
       - mysql-db:/var/lib/mysql
   

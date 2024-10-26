@@ -6,6 +6,7 @@ import { editPost } from "./actionEdit";
 import { useParams } from "next/navigation";
 import "./edit.scss";
 import Link from "next/link";
+import { getCookie } from "@/app/components/functions/getCookies";
 
 // import { createPost } from "./actionEdit";
 
@@ -22,10 +23,13 @@ export default function EditPost() {
 
   useEffect(() => {
     const getPosts = async() => {
+      const token = getCookie('token')
       const res = await fetch(`http://localhost:3000/api/v1/posts/${id}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        }
       });
       const data = await res.json()
-      console.log(data)
       setTitle(data.title)
       setContent(data.content)
       setCategoryData(data.category_id)

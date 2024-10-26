@@ -7,9 +7,6 @@ export const signupUser = async (formData: FormData) => {
   const password = formData.get('password')
   const passwordConf = formData.get('passwordConf')
 
-  console.log([...formData.entries()])
-
-
   const res = await fetch('http://api:3000/api/v1/users', {
     method: 'POST',
     headers: {
@@ -24,7 +21,7 @@ export const signupUser = async (formData: FormData) => {
     })
   })
   if(res.ok) {
-    redirect('/')
+    redirect('/auth/login')
   } else {
     const errorData = await res.json()
     throw new Error('失敗しました', errorData)

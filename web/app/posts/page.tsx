@@ -4,16 +4,16 @@ import Link from "next/link";
 import "./postList.scss";
 import DeleteBtn from "@/features/posts/components/postList/crudBtns/DeleteBtn";
 import { cookies } from "next/headers";
+import Header from "../components/layouts/header/Header";
 
 export const PostList = async () => {
   const cookieStore = cookies();
   const token = cookieStore.get("token");
-  console.log(token)
 
   const res = await fetch("http://api:3000/api/v1/posts", {
     method: "GET",
     headers: {
-      "Authorization": `Bearer ${token?.value}`, // Authorizationヘッダーにトークンを追加
+      "Authorization": `Bearer ${token?.value}`, 
       "Content-Type": "application/json",
     },
     cache: "no-store",
@@ -24,6 +24,7 @@ export const PostList = async () => {
 
   return (
     <div className="posts">
+      <Header />
       <div>
         <h1 className="heading">投稿一覧</h1>
         <Link href="create">
@@ -54,12 +55,12 @@ export const PostList = async () => {
           </li>
         ))}
       </ul>
-      <Link href={"auth/signup"}>
+      {/* <Link href={"auth/signup"}>
         <button className="editBtn">signup</button>
-      </Link>
-      <Link href={"auth/login"}>
+      </Link> */}
+      {/* <Link href={"auth/login"}>
         <button className="editBtn">login</button>
-      </Link>
+      </Link> */}
     </div>
   );
 };
