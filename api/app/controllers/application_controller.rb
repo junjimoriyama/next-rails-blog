@@ -39,6 +39,7 @@ class ApplicationController < ActionController::API
       # デコードしたトークンからユーザーIDを取得し、データベースから該当するユーザーを検索
       # JWTのペイロードには "user_id" が含まれているため、それを使ってユーザーを特定
       @current_user = User.find(decode_token[0]['user_id'])
+      # render json: @current_user
 
 
       Rails.logger.info "現在のユーザーは: #{@current_user.inspect}"

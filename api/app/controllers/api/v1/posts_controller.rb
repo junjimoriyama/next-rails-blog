@@ -3,9 +3,17 @@ class Api::V1::PostsController < ApplicationController
   # before_action :authenticate, only: [:show, :create]  
   before_action :authenticate # 全アクションに適用
   
+  # def index
+  #   @posts = @current_user.posts.includes(:category)
+  #   render json: @posts.as_json(include: { category: { only: [:name] } })
+  # end
+
   def index
     @posts = Post.includes(:category).all
-    render json: @posts.as_json(include: { category: { only: [:name] } })
+    render json: {
+      posts: @posts.as_json(include: { category: { only: [:name] } }),
+      current_user: @current_user.as_json(only: [:id, :email])
+    }
   end
 
   def show
@@ -14,13 +22,21 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def create
-    @post = Post.new(post_params)
+    @post = @current_user.posts.build(post_params)
     if @post.save
       render json: @post, status: :created
     else
       render json: { message: @post.errors.full_messages }, status: :unprocessable_entity
     end
   end
+  # def create
+  #   @post = Post.new(post_params)
+  #   if @post.save
+  #     render json: @post, status: :created
+  #   else
+  #     render json: { message: @post.errors.full_messages }, status: :unprocessable_entity
+  #   end
+  # end
 
   def update
     @post = Post.find(params[:id])
