@@ -5,6 +5,7 @@ import "./postList.scss";
 import DeleteBtn from "@/features/posts/components/postList/crudBtns/DeleteBtn";
 import { cookies } from "next/headers";
 import Header from "../components/layouts/header/Header";
+import Favorite from "../components/elements/favorite/Favorite";
 
 export const PostList = async () => {
   const cookieStore = cookies();
@@ -36,6 +37,7 @@ export const PostList = async () => {
       <ul className="postList">
         {posts.map((post: postProps) => (
           <li key={post.id} className="postItem">
+            <Favorite />
             <Link href={`posts/${post.id}`}>
               <h2 className="title">{`${post.title}`}</h2>
             </Link>

@@ -1,0 +1,17 @@
+.favorite {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  svg {
+    path {
+      fill: #fff;
+
+      &.isActive {
+        fill: pink;
+      }
+    }
+  }
+}

@@ -26,6 +26,7 @@
     align-items: center;
     gap: 20px;
     .postItem {
+      position: relative;
       display: flex;
       flex-direction: column;
       width: 600px;
