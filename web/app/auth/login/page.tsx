@@ -37,6 +37,9 @@ const login = () => {
         onChange={(e: ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
         />
         </label>
+        <Link href={"/auth/forgotPassword"}>
+        <div className="forgotPassword">パスワードお忘れの方</div>
+      </Link>
         <button className="loginBtn" type='submit'>送信</button>
       </form>
 

@@ -19,8 +19,10 @@ export const PostList = async () => {
     cache: "no-store",
     credentials: "include",
   });
-  // ポストのデータ
-  const posts = await res.json();
+  
+  // ポストとユーザーのデータ
+ const { posts, current_user } = await res.json()
+
 
   return (
     <div className="posts">
@@ -46,12 +48,14 @@ export const PostList = async () => {
                 投稿日：{new Date(post.created_at).toLocaleDateString("ja-JP")}
               </span>
             </p>
+              {post.user_id === current_user.id &&
             <div className="btns">
               <Link href={`edit/${post.id}`}>
                 <button className="editBtn">編集</button>
               </Link>
               <DeleteBtn id={post.id} />
-            </div>
+            </div> 
+              }
           </li>
         ))}
       </ul>
