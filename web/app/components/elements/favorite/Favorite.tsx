@@ -4,15 +4,14 @@ import React, { useEffect, useState } from 'react'
 import './favorite.scss'
 import { getCookie } from '../../functions/getCookies'
 
-const Favorite = ({postId, initialFavorite}: {postId:number, initialFavorite:boolean}) => {
+const Favorite = ({postId, postFavoritesCount, initialFavorite}: {postId:number, postFavoritesCount:number, initialFavorite:boolean}) => {
 
-  const [ count, setCount ] = useState(0)
+  const [ count, setCount ] = useState(postFavoritesCount)
   const [ isFavorited, setIsFavorited ] = useState(initialFavorite)
 
   const handleClickFavorite = async () => {
     const token = getCookie("token")
     const method = isFavorited ? "DELETE" : "POST"
-
     const res = await fetch(`http://localhost:3000/api/v1/posts/${postId}/favorite`, {
       method: method,
       headers: {
@@ -21,6 +20,19 @@ const Favorite = ({postId, initialFavorite}: {postId:number, initialFavorite:boo
       },
     })
     setIsFavorited(!isFavorited)
+
+    const countRes = await fetch(`http://localhost:3000/api/v1/posts/`, {
+      method: 'GET',
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    })
+    const data = await countRes.json()
+    // 現在の投稿
+    const currentPost = data.posts.find((post: any) => postId === post.id)
+    // 現在の投稿を表示
+    setCount(currentPost.favorites_count)
   }
 
   return (
@@ -48,7 +60,10 @@ className={`${isFavorited ? 'isActive' : ''}`}
 d="m32.3 14.5c6.4 0 12.4 2.5 17 7 9.4 9.4 9.4 24.6 0 33.9-4.5 4.5-10.6 7-17 7s-12.4-2.5-17-7c-9.4-9.4-9.4-24.6 0-33.9 4.5-4.5 10.6-7 17-7m0-1c-6.4 0-12.8 2.4-17.7 7.3-9.8 9.8-9.8 25.6 0 35.4 4.9 4.9 11.3 7.3 17.7 7.3s12.8-2.4 17.7-7.3c9.8-9.8 9.8-25.6 0-35.4-4.9-4.9-11.3-7.3-17.7-7.3z" />
 </svg>
 
-{/* <div className="favoriteCount">{count}</div> */}
+{
+
+<div className="favoriteCount">{count}</div>
+}
     </div>
   )
 }

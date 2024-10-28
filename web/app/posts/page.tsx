@@ -21,8 +21,8 @@ export const PostList = async () => {
   });
   
   // ポストとユーザーのデータ
- const { posts, current_user, favorites } = await res.json()
-//  console.log('posts', posts)
+ const { posts, current_user, favorites_count } = await res.json()
+ console.log('favorites_count', favorites_count)
 
   return (
     <div className="posts">
@@ -38,14 +38,16 @@ export const PostList = async () => {
           <li key={post.id} className="postItem">
             <Favorite
             postId={post.id}
+            postFavoritesCount={post.favorites_count}
             initialFavorite={post.favorites}
             />
+            {/* <p className="favoritesCount">{post.favorites_count}</p> */}
             <Link href={`posts/${post.id}`}>
               <h2 className="title">{`${post.title}`}</h2>
             </Link>
             <p className="content">{`${post.content}`}</p>
             <p className="categories">
-              <span>カテゴリー：{post.category.name}</span>
+              <span>カテゴリー：{post.category}</span>
             </p>
             <p className="date">
               <span>
