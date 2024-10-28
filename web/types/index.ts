@@ -5,7 +5,8 @@ export interface postProps {
   content: string,
   category: {name: string},
   created_at: number,
-  user_id: number
+  user_id: number,
+  favorites: boolean
 }
 
 // DeleteBtnProps: 削除ボタンのためのプロパティ。削除対象のIDを持つ。

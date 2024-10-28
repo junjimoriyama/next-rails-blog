@@ -10,7 +10,6 @@ import Favorite from "../components/elements/favorite/Favorite";
 export const PostList = async () => {
   const cookieStore = cookies();
   const token = cookieStore.get("token");
-
   const res = await fetch("http://api:3000/api/v1/posts", {
     method: "GET",
     headers: {
@@ -22,8 +21,8 @@ export const PostList = async () => {
   });
   
   // ポストとユーザーのデータ
- const { posts, current_user } = await res.json()
-
+ const { posts, current_user, favorites } = await res.json()
+//  console.log('posts', posts)
 
   return (
     <div className="posts">
@@ -37,7 +36,10 @@ export const PostList = async () => {
       <ul className="postList">
         {posts.map((post: postProps) => (
           <li key={post.id} className="postItem">
-            <Favorite />
+            <Favorite
+            postId={post.id}
+            initialFavorite={post.favorites}
+            />
             <Link href={`posts/${post.id}`}>
               <h2 className="title">{`${post.title}`}</h2>
             </Link>
