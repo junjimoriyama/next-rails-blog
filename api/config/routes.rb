@@ -2,13 +2,13 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :categories, only: [:index, :show, :create, :update, :destroy]
-      resources :posts, only: [:index, :show, :create, :update, :destroy]
+      resources :posts, only: [:index, :show, :create, :update, :destroy] do
+        resource :favorite, only: [:create, :destroy]
+      end
       resources :users, only: [:index, :show, :create, :update, :destroy]
       # 認証
       post 'login', to: 'authentication#login'
-      # パスワード
-      get 'password/reset', to: 'password_reset#new'
-      post 'password/reset', to: 'password_reset#create'
+      # パスワード(authenticateコントローラーに振り分ける様に設定)
     end
   end
 

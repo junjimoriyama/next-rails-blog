@@ -10,9 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2024_10_26_050004) do
+ActiveRecord::Schema[7.2].define(version: 2024_10_28_113430) do
   create_table "categories", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "favorites", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "post_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -24,6 +31,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_26_050004) do
     t.datetime "updated_at", null: false
     t.bigint "category_id", null: false
     t.bigint "user_id", null: false
+    t.integer "favorites_count", default: 0
     t.index ["category_id"], name: "index_posts_on_category_id"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
@@ -33,6 +41,7 @@ ActiveRecord::Schema[7.2].define(version: 2024_10_26_050004) do
     t.string "password_digest"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "password_reset_token"
   end
 
   add_foreign_key "posts", "categories"

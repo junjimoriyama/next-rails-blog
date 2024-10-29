@@ -12,6 +12,9 @@ class Api::V1::AuthenticationController < ApplicationController
       render status: :unauthorized
     end
   end
+end
+  # ここでパスワードリセット用のコードを書く
+  
 
   # def login
   #   @user = User.find_by(email: params[:user][:email])
@@ -40,7 +43,7 @@ class Api::V1::AuthenticationController < ApplicationController
   #   secret_key = Rails.application.credentials.secret_key_base
   #   JWT.encode(payload, secret_key)
   # end
-end
+
 
 # ユーザーがログインを試みると、サーバーはユーザーを検索し、認証が成功すれば JWT トークンを発行します。
 # クライアントはこのトークンを保存し、次のリクエストで Authorization ヘッダーにトークンを含めて送信します。

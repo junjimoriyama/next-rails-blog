@@ -1,11 +1,12 @@
 import { postProps } from "@/types";
 import Link from "next/link";
-// style
-import "./postList.scss";
 import DeleteBtn from "@/features/posts/components/postList/crudBtns/DeleteBtn";
-import { cookies } from "next/headers";
 import Header from "../components/layouts/header/Header";
 import Favorite from "../components/elements/favorite/Favorite";
+// ssrのクッキーの取得
+import { cookies } from "next/headers";
+// style
+import "./postList.scss";
 
 export const PostList = async () => {
   const cookieStore = cookies();
@@ -22,7 +23,6 @@ export const PostList = async () => {
   
   // ポストとユーザーのデータ
  const { posts, current_user, favorites_count } = await res.json()
- console.log('favorites_count', favorites_count)
 
   return (
     <div className="posts">
