@@ -22,7 +22,9 @@ const forgotPassword = () => {
           onChange={e => setEmail(e.target.value)}
           // onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
           />
+          <p className='forgotPasswordText'>パスワードリセットのメール送ります。</p>
         </label>
+        
 
         <button className="forgotPasswordBtn" type='submit'>送信</button>
       </form>

@@ -45,6 +45,9 @@ group :development, :test do
 
   # OmakaseのRubyスタイルを適用
   gem "rubocop-rails-omakase", require: false
+
+  gem 'letter_opener_web', group: :development
+
 end
 
 
