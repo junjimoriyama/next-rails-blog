@@ -38,7 +38,7 @@ const login = () => {
         />
         </label>
         <Link href={"/auth/forgotPassword"}>
-        <div className="forgotPassword">パスワードお忘れの方</div>
+        <div className="forgotPasswordLink">パスワードお忘れの方</div>
       </Link>
         <button className="loginBtn" type='submit'>送信</button>
       </form>

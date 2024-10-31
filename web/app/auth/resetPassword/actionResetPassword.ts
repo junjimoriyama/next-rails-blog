@@ -1,9 +1,10 @@
 "use server";
 
+import { redirect } from "next/navigation";
+
 export const sendPassword = async (formData: FormData) => {
   const password = formData.get("password");
   const token = formData.get("token");
-  console.log('token123----------------',token)
 
   try {
     const res = await fetch(`http://api:3000/api/v1/password_resets/${token}`, {
@@ -13,17 +14,15 @@ export const sendPassword = async (formData: FormData) => {
       },
       body: JSON.stringify({password: password}),
     });
+    if (res.ok) {
+      redirect('/auth/login')
+    }
     if (!res.ok) {
       const errorData = await res.json(); 
       // エラーメッセージが含まれる可能性のあるレスポンスを取得
       console.log(errorData)
-      // throw new Error(`Error: ${res.status}, Message: ${errorData.message}`);
     }
 
-    if (res.ok) {
-      const data = res.json();
-      console.log("dataは-----------", data);
-    }
   } catch (error) {
     console.log(error);
   }

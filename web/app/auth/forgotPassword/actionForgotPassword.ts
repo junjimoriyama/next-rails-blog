@@ -1,5 +1,7 @@
 'use server'
 
+import { redirect } from "next/navigation";
+
 export const sendEmail = async(formData: FormData) => {
   
   const email = formData.get('email')
@@ -14,8 +16,7 @@ export const sendEmail = async(formData: FormData) => {
   })
 
   if(res.ok) {
-    const data = await res.json()
-    console.log('リセット用のメール送れました', data)
+    redirect('/auth/sendResetPasswordMail')
   } else {
     console.error('Error:', res.statusText)
   }
