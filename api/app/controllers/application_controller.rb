@@ -8,6 +8,7 @@ class ApplicationController < ActionController::API
     secret_key = Rails.application.credentials.secret_key_base
     # ペイロードとシークレットキーを使ってJWTトークンを生成し、token変数に格納
     token = JWT.encode(payload, secret_key)
+    Rails.logger.info(token)
     # 生成されたトークンを呼び出し元に返す
     return token
   end

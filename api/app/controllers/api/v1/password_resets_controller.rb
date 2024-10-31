@@ -3,29 +3,53 @@ class Api::V1::PasswordResetsController < ApplicationController
   end
 
   def create
+    # リクエストで送られてきたemailがUserテーブルにあるか確認
     @user = User.find_by(email: params[:email])
 
     if @user.present?
+      # user: @userはPasswordResetMailerへparamsとして渡される
       PasswordResetMailer.with(user: @user).reset.deliver_later
       render json:{message: 'リクエストありがとうございます。パスワードリセットメールを送りました。'}
     else
       render json:{message: 'メールアドレスを見つかりませんでした。ご確認お願いします。'}
     end
-  end
+  end  
 
-  def edit
-    @user = User.find_signed!(params[:token], purpose: 'password_reset')
-  end
+  # def edit
+  #   Rails.logger.info "editアクションが呼ばれました。"
+  #   @user = User.find_signed!(params[:token], purpose: 'password_reset')
+  #   Rails.logger.info "editの部分にある #{@user}"
+  #     if @user.present?
+  #       render json: { message: 'トークン有効です。パスワード再設定ページへ進んでください。' }, status: :ok
+  #     else
+  #       render json: { error: 'トークンが無効か、期限切れです。' }, status: :unprocessable_entity
+  #     end
+  # end
 
   def update
-    if @user.update(password_params)
-      render json:{message: 'パスワードをリセットされました。ログインしてください。'}
+    Rails.logger.info "PasswordResetsController#update called"
+    Rails.logger.info "updateメソッドのトークンは#{params[:id]}"
+    Rails.logger.info "updateメソッドの秘密鍵は#{Rails.application.credentials.secret_key_base}"
+    
+    
+    begin
+      Rails.logger.info "Trying to find user with signed token..."
+      @user = User.find_signed!(params[:id], purpose: 'password_reset')
+      Rails.logger.info "アップデート処理時の#{@user}"
+    rescue => e
+      Rails.logger.error "Failed to find user with token: #{e.message}"
+      return render json: { error: "Invalid or expired token" }, status: :unprocessable_entity
+    end
+  
+    if @user.update(password: params[:password])
+      render json: { message: 'パスワードが変更されました。ログインしてください。' }
     else
       render :edit
     end
   end
+  
 
   def password_params
-    
+    params.require(:password)
   end
 end

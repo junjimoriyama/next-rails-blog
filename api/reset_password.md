@@ -82,10 +82,20 @@
 
 #ジョブは後から実行される（指定ができる）今回はパスワードリセットリンクの期限(例えば15分後)を登録。
 
+1. routes.rbでresources :password_resets, only: [:new, :create, :edit, :update]などとルートの設定
+2. フロントエンドでメールアドレスを送信 (POST /api/v1/password/reset)
+- bodyにJSON形式の文字列に変換したemailの情報を含める。
+3. Railsのpassword_resets#createがリクエストを受け取る
+- 送られたemailを元に該当のuserを見つける。user情報を含めパスワードリセットメールを送信するためのメールクラスを呼び出す。その中のresetメソッドを呼び出す。これは非同期で送信されることを設定。
+4. メールの生成と送信
+- resetメソッド内でメールの生成と送信。この中で現在のuserを元にトークンの生成。メールの宛先とタイトルの設定も行う。
+5. ApplicationMailerがデフォルト設定とレイアウトを提供。text,htmlの二つを用意。
+- どちらにもパスワードリセットの遷移先を貼り付け、トークンも送れる様にする。
+6. PasswordResetMailerで設定されていたdeliver_laterによりメールは非同期で送信
+7. 
+8. 
+9. 
+10. 
+11. 
 
-1. フロントエンドでメールアドレスを送信 (POST /api/v1/password/reset)
-2. Railsのpassword_resets#createがリクエストを受け取る
-3. ユーザーが存在すればPasswordResetMailerが呼ばれる
-4. PasswordResetMailer#resetでメールが生成され、送信される
-5. ApplicationMailerがデフォルト設定とレイアウトを提供
-6. deliver_laterによりメールは非同期で送信
+<!-- ko94/iTFaTijxOwCSL3YnCylBdwZTcq8Yd/603YOPFlJlbxfmw5CAUFnDmP3loJcq5NPI7B8EYdgMoMK+QajgyQUSWAc9gwNISCKXpFn3U0UvgvJfK8DgvAqiOC5Jk8GUvxAhZjcexLdutBLmD0fkJvMFZbXQyUQ11zcaAMIiufc2quAivYayrC6eobT98z55E93Gia1EEPuEXlV/vVxQF6aNlQ5oC0TbEFtOuGwLW3lbM8/spA4yD4S0ClP6HuXuZjiQ3KJz1A4GbY+qBn5M26RNv6XH36vErfUr7UColh1tUGmfj7p798tp7nfGbISev3Blnj1cDjxQgYSaZDHzRkGS7R79qqnSHzGiaEL8kyoMCnLHHOpbZutvS/XyQIQV87bIZ3L82IK82LUVkN6xFpB4Xj0--jQKobTEFffHIgfMu--vzwfS54USxIU7yH94iSFeA== -->
