@@ -5,11 +5,14 @@ Rails.application.routes.draw do
       resources :posts, only: [:index, :show, :create, :update, :destroy] do
         resource :favorite, only: [:create, :destroy]
       end
+      # ユーザー
       resources :users, only: [:index, :show, :create, :update, :destroy]
       # 認証
       post 'login', to: 'authentication#login'
 
       resources :password_resets, only: [:new, :create, :edit, :update]
+      # updateアクションにのみカスタムルートを追加
+      put 'password_resets', to: 'password_resets#update'
     
     end
   end

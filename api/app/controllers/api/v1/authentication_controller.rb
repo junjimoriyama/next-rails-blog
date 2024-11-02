@@ -1,5 +1,4 @@
 class Api::V1::AuthenticationController < ApplicationController
-  # before_action :authenticate, only: [:authenticate]  # 認証が必要なアクションに適用
 
   # ログイン時の認証
   def login

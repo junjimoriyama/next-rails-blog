@@ -3,21 +3,12 @@ class Api::V1::PostsController < ApplicationController
   # before_action :authenticate, only: [:show, :create]  
   before_action :authenticate # 全アクションに適用
 
-  # def index
-  #   @posts = Post.includes(:category).all
-  #   render json: {
-  #     posts: @posts.as_json(include: { category: { only: [:name] } }),
-  #     current_user: @current_user.as_json(only: [:id, :email])
-  #   }
-  # end
-
   def index
     posts = Post.includes(:category).all.map do |post|
       # postオブジェクトの属性を全て取得
       post_data = post.attributes # attributesを使用
       post_data[:favorites] = @current_user.already_favorited?(post) 
       post_data[:category] = post.category.name
-      Rails.logger.info "Post data: #{post_data.inspect}"  
       post_data
     end
     render json: {
@@ -28,7 +19,13 @@ class Api::V1::PostsController < ApplicationController
   
   def show
     @post = Post.find(params[:id])
-    render json: @post
+    post_data = @post.attributes
+    post_data[:category] = @post.category.name
+    
+    render json: {
+      post: post_data,
+      current_user: @current_user
+    }
   end
 
   def create

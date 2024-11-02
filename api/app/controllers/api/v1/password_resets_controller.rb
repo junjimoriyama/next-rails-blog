@@ -27,26 +27,21 @@ class Api::V1::PasswordResetsController < ApplicationController
   # end
 
   def update
-    Rails.logger.info "PasswordResetsController#update called"
-    Rails.logger.info "updateメソッドのトークンは#{params[:id]}"
-    Rails.logger.info "updateメソッドの秘密鍵は#{Rails.application.credentials.secret_key_base}"
-    
-    
     begin
-      Rails.logger.info "Trying to find user with signed token..."
-      @user = User.find_signed!(params[:id], purpose: 'password_reset')
-      Rails.logger.info "アップデート処理時の#{@user}"
+      @user = User.find_signed!(params[:token], purpose: 'password_reset')
+      Rails.logger.info "アップデート処理時のユーザー: #{@user}"
     rescue => e
-      Rails.logger.error "Failed to find user with token: #{e.message}"
+      Rails.logger.error "アップデート失敗: #{e.message}"
       return render json: { error: "Invalid or expired token" }, status: :unprocessable_entity
     end
   
     if @user.update(password: params[:password])
       render json: { message: 'パスワードが変更されました。ログインしてください。' }
     else
-      render :edit
+      render json: { error: "Failed to update password" }, status: :unprocessable_entity
     end
   end
+  
   
 
   def password_params

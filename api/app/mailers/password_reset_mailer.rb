@@ -2,7 +2,7 @@ class PasswordResetMailer < ApplicationMailer
   # パスワードリセットメールを生成し、ユーザーに送信する
   def reset
     @user = params[:user]
-    @token = params[:user].signed_id(purpose: 'password_reset')
+    @token = params[:user].signed_id(purpose: 'password_reset', expires_in: 15.minutes)
 
     Rails.logger.info "resetメソッドのトークンは#{@token}"
     Rails.logger.info "resetメソッドの秘密鍵は#{Rails.application.credentials.secret_key_base}"

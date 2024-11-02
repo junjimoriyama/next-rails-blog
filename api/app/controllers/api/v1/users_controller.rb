@@ -1,8 +1,13 @@
 class Api::V1::UsersController < ApplicationController
 
+  before_action :authenticate
+
   def index
     @user = User.all
-    render json: @user
+    render json: {
+      allUser: @user,
+      current_user: @current_user
+  }
   end
 
   def create
@@ -11,6 +16,13 @@ class Api::V1::UsersController < ApplicationController
       render json: @user, status: :created
     else
       render json: { message:  @user.errors.full_messages}, status: :unprocessable_entity
+    end
+  end
+
+  def show
+    @user = Post.find(params[:user_id])
+    if @suer.present?
+      render json: @user
     end
   end
 
