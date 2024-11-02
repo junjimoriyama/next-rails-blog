@@ -67,14 +67,13 @@ Rails.application.configure do
   # before_actionのonly/exceptオプションが存在しないアクションを参照している場合にエラーを発生させる。
   config.action_controller.raise_on_missing_callback_actions = true
 
-   # "api"ホスト名を許可
+  # "api"ホスト名を許可
   config.hosts << "api"
 
   # `bin/rails generate`で生成されたファイルに対してRuboCopによる自動修正を適用する。
   # config.generators.apply_rubocop_autocorrect_after_generate!
-  
+
   config.action_mailer.delivery_method = :letter_opener_web
   config.action_mailer.perform_deliveries = true
   config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
-
 end

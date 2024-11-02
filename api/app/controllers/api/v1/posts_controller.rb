@@ -1,30 +1,30 @@
 class Api::V1::PostsController < ApplicationController
   #認証後に実行できる処理
-  # before_action :authenticate, only: [:show, :create]  
+  # before_action :authenticate, only: [:show, :create]
   before_action :authenticate # 全アクションに適用
 
   def index
     posts = Post.includes(:category).all.map do |post|
       # postオブジェクトの属性を全て取得
       post_data = post.attributes # attributesを使用
-      post_data[:favorites] = @current_user.already_favorited?(post) 
+      post_data[:favorites] = @current_user.already_favorited?(post)
       post_data[:category] = post.category.name
       post_data
     end
     render json: {
       posts: posts,
-      current_user: @current_user.as_json(only: [:id, :email])
+      current_user: @current_user.as_json(only: [:id, :email]),
     }
   end
-  
+
   def show
     @post = Post.find(params[:id])
     post_data = @post.attributes
     post_data[:category] = @post.category.name
-    
+
     render json: {
       post: post_data,
-      current_user: @current_user
+      current_user: @current_user,
     }
   end
 
@@ -36,6 +36,7 @@ class Api::V1::PostsController < ApplicationController
       render json: { message: @post.errors.full_messages }, status: :unprocessable_entity
     end
   end
+
   # def create
   #   @post = Post.new(post_params)
   #   if @post.save
@@ -50,7 +51,7 @@ class Api::V1::PostsController < ApplicationController
     if @post.update(post_params)
       render json: @post
     else
-      render json: {error: @post.errors.full_messages}, status: :unprocessable_entity
+      render json: { error: @post.errors.full_messages }, status: :unprocessable_entity
     end
   end
 
@@ -60,33 +61,11 @@ class Api::V1::PostsController < ApplicationController
   end
 
   private
+
   def post_params
     params.require(:post).permit(:title, :content, :category_id)
   end
-
-end 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+end
 
 # class Api::V1::PostsController < ApplicationController
 #   def index
@@ -109,7 +88,7 @@ end
 #   end
 
 #   def update
-    
+
 #   end
 
 #   def destroy
@@ -119,4 +98,4 @@ end
 #   def post_params
 #     params.require(:post).permit(:title, :content, category: [])
 #   end
-# end 
+# end

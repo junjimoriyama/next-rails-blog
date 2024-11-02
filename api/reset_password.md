@@ -92,10 +92,19 @@
 5. ApplicationMailerがデフォルト設定とレイアウトを提供。text,htmlの二つを用意。
 - どちらにもパスワードリセットの遷移先を貼り付け、トークンも送れる様にする。
 6. PasswordResetMailerで設定されていたdeliver_laterによりメールは非同期で送信
-7. 
-8. 
-9. 
-10. 
-11. 
+
+
+アクティブストレージ（railsガイド参照）保存先の設定できる
+→ ローカル：ディスク　本番環境：aws
+・ローカル環境だと使える
+・本番環境にデプロイした際に
+・デプロイ先は記憶領域を持たないことが多い。リセットされてしまう。
+・ホスティングサービスでデータ領域を買うか外部ストレージを使う。
+・aws s3 低コスト（毎月数円）
+
+フロント側から送られた画像をrailsで受け取る様にする必要がある。
+ストロングパラメーターをストロングパラメーターで受け取る様にする
 
 <!-- ko94/iTFaTijxOwCSL3YnCylBdwZTcq8Yd/603YOPFlJlbxfmw5CAUFnDmP3loJcq5NPI7B8EYdgMoMK+QajgyQUSWAc9gwNISCKXpFn3U0UvgvJfK8DgvAqiOC5Jk8GUvxAhZjcexLdutBLmD0fkJvMFZbXQyUQ11zcaAMIiufc2quAivYayrC6eobT98z55E93Gia1EEPuEXlV/vVxQF6aNlQ5oC0TbEFtOuGwLW3lbM8/spA4yD4S0ClP6HuXuZjiQ3KJz1A4GbY+qBn5M26RNv6XH36vErfUr7UColh1tUGmfj7p798tp7nfGbISev3Blnj1cDjxQgYSaZDHzRkGS7R79qqnSHzGiaEL8kyoMCnLHHOpbZutvS/XyQIQV87bIZ3L82IK82LUVkN6xFpB4Xj0--jQKobTEFffHIgfMu--vzwfS54USxIU7yH94iSFeA== -->
+
+

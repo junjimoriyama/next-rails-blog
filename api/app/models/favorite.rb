@@ -3,9 +3,8 @@ class Favorite < ApplicationRecord
   # 自動的に数を更新
   belongs_to :post, counter_cache: true
 
-  validates :user_id, uniqueness: {scope: :post_id, message:'すでにいいねしています。'}
+  validates :user_id, uniqueness: { scope: :post_id, message: "すでにいいねしています。" }
 end
-
 
 # いいね機能実装手順
 # ① いいねの作成、削除機能
@@ -19,4 +18,3 @@ end
 # next -----------------------------------------------------------------------
 # Favoriteの子コンポーネント作成。その中にconst [ isFavorited, setIsFavorited ] = useState(initialFavorite)のようにisFavoritedで初期値をfalseで定義しこれでUI上の管理を行う。(postsに関する各値は親コンポーネントから取得)
 # いいねボタンに対してクリックイベントが発火したらisFavoritedのtrue,falseの状態によって( const method = isFavorited ? "DELETE" : "POST")の様に削除か作成かのメソッドを切り分ける。その結果をsetする。
-

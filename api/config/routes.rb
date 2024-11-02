@@ -8,12 +8,11 @@ Rails.application.routes.draw do
       # ユーザー
       resources :users, only: [:index, :show, :create, :update, :destroy]
       # 認証
-      post 'login', to: 'authentication#login'
+      post "login", to: "authentication#login"
 
       resources :password_resets, only: [:new, :create, :edit, :update]
-      # updateアクションにのみカスタムルートを追加
-      put 'password_resets', to: 'password_resets#update'
-    
+      # updateアクションにのみカスタムルートを追加(通常idを要求されるがトークンuserを見つけるため)
+      put "password_resets", to: "password_resets#update"
     end
   end
 

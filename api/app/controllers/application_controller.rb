@@ -12,11 +12,10 @@ class ApplicationController < ActionController::API
     # 生成されたトークンを呼び出し元に返す
     return token
   end
-  
 
   def authenticate
     # Rails.logger.info "authenticateのtokenは: #{token}"
-    # token = cookies.signed[:jwt] 
+    # token = cookies.signed[:jwt]
     authentication_header = request.headers[:authorization]
     # if token.nil?
     # Authorizationヘッダーが存在しない場合のチェック
@@ -26,7 +25,7 @@ class ApplicationController < ActionController::API
       render_unauthorized
     else
       # Authorizationヘッダーがある場合、'Bearer トークン' の形式からトークンを抽出
-      token = authentication_header.split(' ')[1]
+      token = authentication_header.split(" ")[1]
       # Railsのcredentialsからシークレットキーを取得
       secret_key = Rails.application.credentials.secret_key_base
     end
@@ -39,18 +38,17 @@ class ApplicationController < ActionController::API
 
       # デコードしたトークンからユーザーIDを取得し、データベースから該当するユーザーを検索
       # JWTのペイロードには "user_id" が含まれているため、それを使ってユーザーを特定
-      @current_user = User.find(decode_token[0]['user_id'])
+      @current_user = User.find(decode_token[0]["user_id"])
       # render json: @current_user
-
 
       Rails.logger.info "現在のユーザーは: #{@current_user.inspect}"
 
-    # ユーザーIDに対応するユーザーがデータベースに存在しない場合
+      # ユーザーIDに対応するユーザーがデータベースに存在しない場合
     rescue ActiveRecord::RecordNotFound
       render_unauthorized
     rescue JWT::ExpiredSignature
       render json: { error: "トークンの有効期限が切れています" }, status: :unauthorized
-    # JWTのデコードに失敗した場合（トークンが無効、改ざん、または期限切れ）
+      # JWTのデコードに失敗した場合（トークンが無効、改ざん、または期限切れ）
     rescue JWT::DecodeError
       Rails.logger.info your_object.inspect
       render json: { error: "トークンのデコードに失敗しました" }, status: :unauthorized
@@ -58,9 +56,8 @@ class ApplicationController < ActionController::API
   end
 
   def render_unauthorized
-    render json: { message: 'アクセス許可されていない' }, status: :unauthorized
+    render json: { message: "アクセス許可されていない" }, status: :unauthorized
   end
-
 end
 
 # プロセスの流れ

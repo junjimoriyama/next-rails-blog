@@ -1,5 +1,5 @@
 class User < ApplicationRecord
-  #パスワードのハッシュ化 
+  #パスワードのハッシュ化
   has_secure_password
   # 1人のユーザーは複数のいいねを持つ。投稿が削除されたらいいねも削除する
   has_many :posts, dependent: :destroy
@@ -12,4 +12,9 @@ class User < ApplicationRecord
 
   # validate :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   # validates :password, length: { minimum: 6 }, if: -> { new_record? || !password.nil? }
+  #
+  #
+  #②二つのカラムに対してユニークかチェックする場合
+  # 例）:latと:lngのカラムの組み合わせでユニークかチェックする場合
+  # validates :lat, uniqueness: { scope: :lng }
 end
