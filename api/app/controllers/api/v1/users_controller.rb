@@ -20,8 +20,8 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def show
-    @user = Post.find(params[:user_id])
-    if @suer.present?
+    @user = User.find(params[:id])
+    if @user.present?
       render json: @user
     end
   end
