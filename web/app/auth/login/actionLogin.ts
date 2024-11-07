@@ -1,6 +1,6 @@
-import { Cookie } from './../../../../node_modules/undici-types/cookies.d';
 'use server'
 
+// import { Cookie } from './../../../../node_modules/undici-types/cookies.d';
 import { redirect } from "next/navigation";
 import { cookies } from 'next/headers'
 
@@ -30,9 +30,9 @@ export const loginUser = async (formData: FormData) => {
     cookieStore.set('token', token, {
       maxAge: 60 * 60 * 24  // 1日間有効
     })
-    redirect('/posts');
+    return {success: true}
   } else {
-    redirect('/auth/signup');
+    return {success: false}
   }
 }
 

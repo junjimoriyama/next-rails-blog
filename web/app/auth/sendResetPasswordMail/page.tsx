@@ -8,7 +8,7 @@ const sendResetPasswordMail = () => {
       <p>パスワードリセット用のメールを送りました。</p>
       <p>ご確認ください。</p>
       <Link href="/auth/login">
-        <button className="backToTop">ログインページに戻る</button>
+        <button className="backToLogin">ログインページに戻る</button>
       </Link>
     </div>
   );

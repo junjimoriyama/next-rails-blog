@@ -1,11 +1,14 @@
 import LogoutButton from '@/app/auth/logout/LogoutButton'
-import React from 'react'
+import UserInfo from '@/app/users/userInfo/UserInfo'
+import './header.scss'
 
 const Header = () => {
+  
   return (
-    <div>
+    <header>
       <LogoutButton/>
-    </div>
+      <UserInfo />
+    </header>
   )
 }
 

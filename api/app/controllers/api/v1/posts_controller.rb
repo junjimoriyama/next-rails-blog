@@ -7,6 +7,8 @@ class Api::V1::PostsController < ApplicationController
     posts = Post.includes(:category).all.map do |post|
       # postオブジェクトの属性を全て取得
       post_data = post.attributes # attributesを使用
+
+      # Rails.logger.info("indexのpost_data#{post_data}")      
       post_data[:favorites] = @current_user.already_favorited?(post)
       post_data[:category] = post.category.name
       post_data
@@ -20,6 +22,8 @@ class Api::V1::PostsController < ApplicationController
   def show
     @post = Post.find(params[:id])
     post_data = @post.attributes
+    # postsページのuserによるいいねの有無を確認
+    post_data[:favorites] = @current_user.already_favorited?(@post)
     post_data[:category] = @post.category.name
 
     render json: {
@@ -63,7 +67,7 @@ class Api::V1::PostsController < ApplicationController
   private
 
   def post_params
-    params.require(:post).permit(:title, :content, :category_id)
+    params.require(:post).permit(:title, :content, :category_id,)
   end
 end
 

@@ -14,22 +14,21 @@ export const PostList = async () => {
   const res = await fetch("http://api:3000/api/v1/posts", {
     method: "GET",
     headers: {
-      "Authorization": `Bearer ${token?.value}`, 
+      Authorization: `Bearer ${token?.value}`,
       "Content-Type": "application/json",
     },
     cache: "no-store",
     credentials: "include",
   });
-  
   // ポストとユーザーのデータ
- const { posts, current_user, favorites_count } = await res.json()
+  const { posts, current_user } = await res.json();
 
   return (
     <div className="posts">
       <Header />
       <div>
         <h1 className="heading">投稿一覧</h1>
-        <Link href="create">
+        <Link href="posts/create">
           <div className="createBtn">新しく投稿する</div>
         </Link>
       </div>
@@ -37,9 +36,9 @@ export const PostList = async () => {
         {posts.map((post: postProps) => (
           <li key={post.id} className="postItem">
             <Favorite
-            postId={post.id}
-            postFavoritesCount={post.favorites_count}
-            initialFavorite={post.favorites}
+              postId={post.id}
+              postFavoritesCount={post.favorites_count}
+              initialFavorite={post.favorites}
             />
             {/* <p className="favoritesCount">{post.favorites_count}</p> */}
             <Link href={`posts/${post.id}`}>
@@ -54,14 +53,14 @@ export const PostList = async () => {
                 投稿日：{new Date(post.created_at).toLocaleDateString("ja-JP")}
               </span>
             </p>
-              {post.user_id === current_user.id &&
-            <div className="btns">
-              <Link href={`edit/${post.id}`}>
-                <button className="editBtn">編集</button>
-              </Link>
-              <DeleteBtn id={post.id} />
-            </div> 
-              }
+            {post.user_id === current_user.id && (
+              <div className="btns">
+                <Link href={`posts/edit/${post.id}`}>
+                  <button className="editBtn">編集</button>
+                </Link>
+                <DeleteBtn id={post.id} />
+              </div>
+            )}
           </li>
         ))}
       </ul>
@@ -170,3 +169,5 @@ export default PostList;
 // };
 
 // export default PostList;
+
+// 111@gmail.com

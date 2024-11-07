@@ -15,7 +15,7 @@ export default function EditPost() {
 
   const [ title, setTitle ] = useState('')
   const [ content, setContent ] = useState('')
-  const [categoryData, setCategoryData] = useState<number>(0);  
+  const [categoryData, setCategoryData] = useState<number | null>(null);  
   const [ categories, setCategories ] = useState([])
 
   // id取得
@@ -30,9 +30,9 @@ export default function EditPost() {
         }
       });
       const data = await res.json()
-      setTitle(data.title)
-      setContent(data.content)
-      setCategoryData(data.category_id)
+      setTitle(data.post.title)
+      setContent(data.post.content)
+      setCategoryData(data.post.category_id)
     }
     getPosts()
 
@@ -78,7 +78,7 @@ export default function EditPost() {
                   type="radio"
                   id={String(category.id)}
                   name="categoryData"
-                  value={categoryData}
+                  value={categoryData ?? ''}
                   checked={category.id === Number(categoryData)}
                   onChange={(e) => {
                     setCategoryData(Number(e.target.id))
@@ -90,10 +90,10 @@ export default function EditPost() {
           })}
         </div>
         <button className="submitBtn" type="submit">
-          送信
+          変更
         </button>
       </form>
-      <Link href='/'>
+      <Link href='/posts'>
       <button className="backTopBtn">
         戻る
       </button>

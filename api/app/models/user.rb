@@ -5,6 +5,8 @@ class User < ApplicationRecord
   has_many :posts, dependent: :destroy
   # 1人のユーザーは複数の投稿を持つ。ユーザーが削除された投稿も削除する
   has_many :favorites, dependent: :destroy
+  # ファイルアップロードが可能
+  has_one_attached :avatar
 
   def already_favorited?(post)
     self.favorites.exists?(post_id: post.id)

@@ -12,6 +12,7 @@ export const sendEmail = async(formData: FormData) => {
     headers: {
       'Content-Type': 'application/json'
     },
+    // メールの中身
     body: JSON.stringify({email: email})
   })
 

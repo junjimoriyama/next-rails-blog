@@ -6,7 +6,9 @@ Rails.application.routes.draw do
         resource :favorite, only: [:create, :destroy]
       end
       # ユーザー
-      resources :users, only: [:index, :show, :create, :update, :destroy]
+      resources :users, only: [:index, :show, :create, :update, :destroy] do
+        get 'me', on: :collection
+      end
       # 認証
       post "login", to: "authentication#login"
 

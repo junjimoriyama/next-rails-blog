@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import "./create.scss";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import { getCookie } from "../components/functions/getCookies";
+import { getCookie } from "@/app/components/functions/getCookies";
 
 export default function CreatePost() {
   const [title, setTitle] = useState("");

@@ -7,14 +7,26 @@ import React, { ChangeEvent, useState } from "react";
 
 const login = () => {
 
-  const [ email, setEmail  ] = useState('')
+  const [ username, setUsername ] = useState('')
+  const [ email, setEmail ] = useState('')
   const [ password, setPassword ] = useState('')
   const [ passwordConf, setPasswordConf  ] = useState('')
-
+  
   return (
     <div className="login">
       <h1>サインイン</h1>
       <form action={signupUser}>
+        <label htmlFor="username">
+          ニックネーム
+          <input 
+          className="username" 
+          type="text" 
+          id="username" 
+          name="username"
+          value={username}
+          onChange={(e: ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
+          />
+        </label>
         <label htmlFor="email">
           メールアドレス
           <input 
