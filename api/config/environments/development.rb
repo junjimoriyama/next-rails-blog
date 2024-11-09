@@ -27,7 +27,8 @@ Rails.application.configure do
   end
 
   # アップロードされたファイルをローカルファイルシステムに保存する（オプションはconfig/storage.ymlを参照）。
-  config.active_storage.service = :local
+  config.active_storage.service = :amazon
+  # config.active_storage.service = :local
 
   # メール送信に失敗しても気にしない。
   config.action_mailer.raise_delivery_errors = false

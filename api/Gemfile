@@ -36,6 +36,9 @@ gem "rack-cors"
 # jwt
 gem "jwt"
 
+# amazon S3への保存
+gem 'aws-sdk-s3'
+
 group :development, :test do
   # デバッグ用gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -46,5 +49,7 @@ group :development, :test do
   # OmakaseのRubyスタイルを適用
   gem "rubocop-rails-omakase", require: false
 
+  # メール送信の確認
   gem "letter_opener_web", group: :development
+
 end
