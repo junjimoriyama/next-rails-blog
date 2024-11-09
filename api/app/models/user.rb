@@ -8,10 +8,20 @@ class User < ApplicationRecord
   # ファイルアップロードが可能
   has_one_attached :avatar
 
+  # ユーザーが「フォローしている関係」を Relationship モデルを通じて管理し、following_idを外部キーとして関連付けています。
+  # active_relationshipsはユーザーが「フォローしている関係」を表すアソシエーション
+  # フォローする側からhas_manyリレーションシップが伸びる
+  has_many :relationships, foreign_key: :following_id
+  has_many :followings, through: :relationships, source: :follower
+
+  # フォローされる側からhas_manyリレーションシップが伸びる
+  has_many :reverse_of_relationships, class_name: "Relationship", foreign_key: :follower_id
+  has_many :followers, through: :reverse_of_relationships, source: :following
+
+
   def already_favorited?(post)
     self.favorites.exists?(post_id: post.id)
   end
-
   # validate :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   # validates :password, length: { minimum: 6 }, if: -> { new_record? || !password.nil? }
   #

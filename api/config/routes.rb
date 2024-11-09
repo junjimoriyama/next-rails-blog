@@ -8,6 +8,11 @@ Rails.application.routes.draw do
       # ユーザー
       resources :users, only: [:index, :show, :create, :update, :destroy] do
         get 'me', on: :collection
+        # 各ユーザーに対して relationship ルートを設定（create、destroy のみ）
+        resource :relationship, only: [:create, :destroy]
+        # 特定のユーザー（id）に対して、フォローしているユーザー（followings）とフォロワー（follower）を取得するルートを設定
+        get :followings, on: :member
+        get :follower, on: :member
       end
       # 認証
       post "login", to: "authentication#login"

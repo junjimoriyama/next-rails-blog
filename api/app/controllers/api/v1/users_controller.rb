@@ -2,14 +2,14 @@ class Api::V1::UsersController < ApplicationController
 
   before_action :authenticate, except: :create
 
-  # def index
-  #   @user = User.all
-  #   Rails.logger.info("indexのuserは#{@user.inspect}") # .inspect を使ってオブジェクトの内容をわかりやすく出力
-  #   render json: {
-  #     allUser: @user,
-  #     current_user: @current_user
-  #   }
-  # end
+  def index
+    @user = User.all
+    Rails.logger.info("indexのuserは#{@user.inspect}") # .inspect を使ってオブジェクトの内容をわかりやすく出力
+    render json: {
+      allUser: @user,
+      current_user: @current_user
+    }
+  end
 
   def create
     @user = User.new(user_params)
