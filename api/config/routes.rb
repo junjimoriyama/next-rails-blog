@@ -12,7 +12,7 @@ Rails.application.routes.draw do
         resource :relationship, only: [:create, :destroy]
         # 特定のユーザー（id）に対して、フォローしているユーザー（followings）とフォロワー（follower）を取得するルートを設定
         get :followings, on: :member
-        get :follower, on: :member
+        get :followers, on: :member
       end
       # 認証
       post "login", to: "authentication#login"
@@ -32,6 +32,7 @@ Rails.application.routes.draw do
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
+
 
   # アプリのルートパスを設定する場所。
   # root "posts#index"

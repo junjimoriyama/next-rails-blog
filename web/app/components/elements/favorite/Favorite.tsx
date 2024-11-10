@@ -12,7 +12,7 @@ const Favorite = ({postId, postFavoritesCount, initialFavorite}: {postId:number,
   const handleClickFavorite = async () => {
     const token = getCookie("token")
     const method = isFavorited ? "DELETE" : "POST"
-    const res = await fetch(`http://localhost:3000/api/v1/posts/${postId}/favorite`, {
+    await fetch(`http://localhost:3000/api/v1/posts/${postId}/favorite`, {
       method: method,
       headers: {
         "Authorization": `Bearer ${token}`, 
@@ -30,7 +30,7 @@ const Favorite = ({postId, postFavoritesCount, initialFavorite}: {postId:number,
     })
     const data = await countRes.json()
     // 現在の投稿
-    const currentPost = data.posts.find((post: any) => postId === post.id)
+    const currentPost = data.posts.find((post: {id: number}) => postId === post.id)
     // 現在の投稿を表示
     setCount(currentPost.favorites_count)
   }

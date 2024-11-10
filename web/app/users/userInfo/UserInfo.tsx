@@ -11,7 +11,7 @@ const UserInfo = () => {
 
   const [id, setId] = useState(null);
   const [username, setUsername] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState(null);
 
   useEffect(() => {
     const fetchUserInfo = async() => {
@@ -28,14 +28,15 @@ const UserInfo = () => {
       const data = await res.json()
       setUsername(data.user.username);
       setId(data.user.id);
-      setAvatarUrl(data.user.avatarUrl);
+      setAvatarUrl(data.user.avatarUrl || null);
 
     }
     fetchUserInfo()
   }, [])
 
+
   return (
-      <Link href={`/users/${id}`}>
+      <Link href={`/users/mypage`}>
     <div className='userInfo'>
       {
         avatarUrl &&

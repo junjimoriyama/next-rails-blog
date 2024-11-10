@@ -11,7 +11,7 @@ class User < ApplicationRecord
   # ユーザーが「フォローしている関係」を Relationship モデルを通じて管理し、following_idを外部キーとして関連付けています。
   # active_relationshipsはユーザーが「フォローしている関係」を表すアソシエーション
   # フォローする側からhas_manyリレーションシップが伸びる
-  has_many :relationships, foreign_key: :following_id
+  has_many :relationships, class_name: "Relationship",foreign_key: :following_id
   has_many :followings, through: :relationships, source: :follower
 
   # フォローされる側からhas_manyリレーションシップが伸びる

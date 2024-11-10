@@ -4,7 +4,6 @@ class Api::V1::UsersController < ApplicationController
 
   def index
     @user = User.all
-    Rails.logger.info("indexのuserは#{@user.inspect}") # .inspect を使ってオブジェクトの内容をわかりやすく出力
     render json: {
       allUser: @user,
       current_user: @current_user
@@ -20,19 +19,19 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
-# def show
-#   @user = User.find(params[:id])
-#   if @user.present?
-#     render json: {
-#       user: {
-#         id: @user.id,
-#         username: @user.username,
-#         email: @user.email,
-#         avatarUrl: @user.avatar.attached? ? url_for(@user.avatar) : nil 
-#       }
-#     }
-#   end
-# end
+def show
+  @user = User.find(params[:id])
+  if @user.present?
+    render json: {
+      user: {
+        id: @user.id,
+        username: @user.username,
+        email: @user.email,
+        avatarUrl: @user.avatar.attached? ? url_for(@user.avatar) : nil 
+      }
+    }
+  end
+end
   
 def update
   @user = User.find(params[:id])
@@ -56,6 +55,29 @@ def me
     }
   end
 end
+
+def followings
+  render json: @current_user.followings
+end
+
+def followers
+  # user = User.find(@current_user.id)
+  render json: @current_user.followers
+end
+
+
+
+# def followings
+#   @followUser = User.where.not(id: @current_user.id)
+#   user = User.find(params[:id])
+#   @followUser = user.followings
+# end
+
+# def followers
+#   @followUser = User.where.not(id: @current_user.id)
+#   user = User.find(params[:id])
+#   @followUser = user.followers
+# end
 
 private
 def user_params
