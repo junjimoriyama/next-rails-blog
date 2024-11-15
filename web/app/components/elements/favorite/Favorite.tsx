@@ -29,9 +29,8 @@ const Favorite = ({postId, postFavoritesCount, initialFavorite}: {postId:number,
       }
     })
     const data = await countRes.json()
-    // 現在の投稿
-    const currentPost = data.posts.find((post: {id: number}) => postId === post.id)
-    // 現在の投稿を表示
+    const currentPost = data.find((post: {id: number}) => postId === post.id)
+    console.log(currentPost)
     setCount(currentPost.favorites_count)
   }
 

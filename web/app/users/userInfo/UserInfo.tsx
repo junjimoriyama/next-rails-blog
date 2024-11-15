@@ -1,9 +1,13 @@
 'use client'
 
-import './userInfo.scss'
+// next
 import Link from 'next/link'
-import { getCookie } from '@/app/components/functions/getCookies'
+// react
 import { useEffect, useState } from 'react'
+// cookies
+import { getCookie } from '@/app/components/functions/getCookies'
+// style
+import './userInfo.scss'
 
 const UserInfo = () => {
 
@@ -20,16 +24,14 @@ const UserInfo = () => {
         method: 'GET',
         headers: {
           "Authorization": `Bearer ${token}`,
-          // "Authorization": `Bearer ${token?.value}`,
           "Content-Type": "application/json",
         },
         credentials: 'include'
       })
       const data = await res.json()
-      setUsername(data.user.username);
-      setId(data.user.id);
-      setAvatarUrl(data.user.avatarUrl || null);
-
+      setUsername(data.username);
+      setId(data.id);
+      setAvatarUrl(data.avatarUrl || null);
     }
     fetchUserInfo()
   }, [])

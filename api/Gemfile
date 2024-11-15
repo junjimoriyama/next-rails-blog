@@ -53,3 +53,5 @@ group :development, :test do
   gem "letter_opener_web", group: :development
 
 end
+
+# http://localhost:3000/letter_opener

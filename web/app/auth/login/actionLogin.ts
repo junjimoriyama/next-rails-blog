@@ -1,7 +1,6 @@
 'use server'
 
-// import { Cookie } from './../../../../node_modules/undici-types/cookies.d';
-import { redirect } from "next/navigation";
+// cookies
 import { cookies } from 'next/headers'
 
 export const loginUser = async (formData: FormData) => {
@@ -35,22 +34,3 @@ export const loginUser = async (formData: FormData) => {
     return {success: false}
   }
 }
-
-
-
-    // const postRes = await fetch('http://api:3000/api/v1/posts',{
-    //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //     "Authorization": `Bearer ${token}`
-    //   },
-    //   credentials: 'include'
-    // })
-
-    // if(postRes.ok) {
-    //   const posts = await postRes.json()
-    //   console.log("投稿データ:", posts);
-    //   redirect('/posts');  // 投稿ページにリダイレクト
-    // } else {
-    //   console.error("投稿データの取得に失敗しました");
-    // }

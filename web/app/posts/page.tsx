@@ -1,41 +1,45 @@
-import { postProps } from "@/types";
+// next
 import Link from "next/link";
-import DeleteBtn from "@/features/posts/components/postList/crudBtns/DeleteBtn";
+// type
+import { postProps } from "@/types";
+// component
 import Header from "../components/layouts/header/Header";
 import Favorite from "../components/elements/favorite/Favorite";
-// ssrのクッキーの取得
-import { cookies } from "next/headers";
+import DeleteBtn from "./delete/DeleteBtn";
+// cookies
+import { cookies, headers } from "next/headers";
 // style
 import "./postList.scss";
+import Avatar from "./components/Avatar";
+import SortBtn from "./components/sortBtn/SortBtn";
 
 export const PostList = async () => {
   const cookieStore = cookies();
   const token = cookieStore.get("token");
-  const res = await fetch("http://api:3000/api/v1/posts", {
-    method: "GET",
-    headers: {
-      "Authorization": `Bearer ${token?.value}`,
-      "Content-Type": "application/json",
-    },
-    cache: "no-store",
-    credentials: "include",
-  });
-  // ポストとユーザーのデータ
-  const { posts, current_user } = await res.json();
+  const headers = {
+    Authorization: `Bearer ${token?.value}`,
+    "Content-Type": "application/json",
+  };
 
-  const userRes = await fetch("http://api:3000/api/v1/users", {
-    method: "GET",
-    headers: {
-      "Authorization": `Bearer ${token?.value}`,
-      // "Content-Type": "application/json",
-    },
-    credentials: "include"
-  })
+  // fetch関数
+  const fetchData = async (url: string, method: string) => {
+    const res = await fetch(url, { method, headers, credentials: "include" });
+    if (res.ok) {
+      return res.json();
+    } else {
+      throw new Error("データ取得に失敗しました");
+    }
+  };
 
-  // console.log("posts.user_idは", posts[0].user_id)
+  // 全ての投稿データ
+  const postData = await fetchData("http://api:3000/api/v1/posts", "GET");
+
+  // 現在のユーザーのデータ
+  const currentUserData = await fetchData("http://api:3000/api/v1/users/me","GET");
 
   // ユーザーのデータ
-  const userData = await userRes.json()
+  const userData = await fetchData("http://api:3000/api/v1/users", "GET");
+
 
   return (
     <div className="posts">
@@ -46,37 +50,45 @@ export const PostList = async () => {
           <div className="createBtn">新しく投稿する</div>
         </Link>
       </div>
+      {/* <SortBtn postData={postData}/> */}
       <ul className="postList">
-        {posts.map((post: postProps, index: number) => {
-          // userの表示
-          const user = userData.allUser.find((user:{id: number}) => user.id === post.user_id)
+        {postData.map((post: postProps) => {
+          // 投稿のuser_idに基づいてユーザーを検索
+          const user = userData.find(
+            (user: { id: number }) => user.id === post.user_id
+          );
+
           return (
             <li key={post.id} className="postItem">
-              <Link href={`users/${posts[index].user_id}`}>
-              <p className="username">
-                {user.username}
-              </p>
+              <Link href={`users/${post.user_id}`}>
+                <div className="userHeader">
+                  <Avatar userId={post.user_id} />
+                  <p className="username">
+                    {user ? user.username : "不明なユーザー"}
+                  </p>
+                </div>
               </Link>
-              
+
               <Favorite
                 postId={post.id}
                 postFavoritesCount={post.favorites_count}
                 initialFavorite={post.favorites}
               />
-              {/* <p className="favoritesCount">{post.favorites_count}</p> */}
+
               <Link href={`posts/${post.id}`}>
-                <h2 className="title">{`${post.title}`}</h2>
+                <h2 className="title">{post.title}</h2>
               </Link>
-              <p className="content">{`${post.content}`}</p>
+              <p className="content">{post.content}</p>
               <p className="categories">
                 <span>カテゴリー：{post.category}</span>
               </p>
               <p className="date">
                 <span>
-                  投稿日：{new Date(post.created_at).toLocaleDateString("ja-JP")}
+                  投稿日：
+                  {new Date(post.created_at).toLocaleDateString("ja-JP")}
                 </span>
               </p>
-              {post.user_id === current_user.id && (
+              {post.user_id === currentUserData.id && (
                 <div className="btns">
                   <Link href={`posts/edit/${post.id}`}>
                     <button className="editBtn">編集</button>
@@ -85,114 +97,11 @@ export const PostList = async () => {
                 </div>
               )}
             </li>
-          )
-        }
-        )}
+          );
+        })}
       </ul>
-      {/* <Link href={"auth/signup"}>
-        <button className="editBtn">signup</button>
-      </Link> */}
-      {/* <Link href={"auth/login"}>
-        <button className="editBtn">login</button>
-      </Link> */}
     </div>
   );
 };
 
 export default PostList;
-
-// 'use client'; // クライアントコンポーネントとして指定
-
-// import { postProps } from "@/types";
-// import Link from "next/link";
-// import "./postList.scss";
-// import { useEffect, useState } from "react";
-// import { cookies } from 'next/headers'
-// import DeleteBtn from "@/features/posts/components/postList/crudBtns/DeleteBtn";
-
-// export const PostList = () => {
-//   const [posts, setPosts] = useState<postProps[]>([]);
-
-//   useEffect(() => {
-// クッキーからトークンを取得
-// const getCookie = (name: string) => {
-//   const value = `; ${document.cookie}`;
-//   console.log(value)
-//   const parts = value.split(`; ${name}=`);
-//   if (parts.length === 2) return parts.pop()?.split(';').shift();
-// };
-
-// const token = getCookie('jwt');  // JWT トークンをクッキーから取得
-// if (!token) {
-//   console.error("トークンがありません。ログインが必要です。");
-//   return;
-// }
-// const token = localStorage.getItem('token')
-// console.log(token)
-
-//     const fetchPosts = async () => {
-
-//       const res = await fetch("http://localhost:3000/api/v1/posts", {
-//         method: 'GET',
-//         headers: {
-//           "Authorization": `Bearer ${token}`,  // Authorizationヘッダーにトークンを追加
-//           "Content-Type": "application/json"
-//         },
-//         cache: "no-store",
-//         credentials: 'include'
-//       });
-
-//       if (res.ok) {
-//         const data = await res.json();
-//         setPosts(data);
-//       } else {
-//         console.error('投稿の取得に失敗しました');
-//       }
-//     };
-
-//     fetchPosts();
-//   }, []);
-
-//   return (
-//     <div className="posts">
-//       <div>
-//         <h1 className="heading">投稿一覧</h1>
-//         <Link href="create">
-//           <div className="createBtn">新しく投稿する</div>
-//         </Link>
-//       </div>
-//       <ul className="postList">
-//         {posts.map((post: postProps) => (
-//           <li key={post.id} className="postItem">
-//             <Link href={`posts/${post.id}`}>
-//               <h2 className="title">{`${post.title}`}</h2>
-//             </Link>
-//             <p className="content">{`${post.content}`}</p>
-//             <p className="categories">
-//               <span>カテゴリー：{post.category.name}</span>
-//             </p>
-//             <p className="date">
-//               <span>投稿日：{new Date(post.created_at).toLocaleDateString('ja-JP')}</span>
-//             </p>
-//             <div className="btns">
-//               <Link href={`edit/${post.id}`}>
-//                 <button className="editBtn">編集</button>
-//               </Link>
-//               <DeleteBtn id={post.id} />
-//             </div>
-//           </li>
-//         ))}
-//       </ul>
-//       <Link href={"auth/signup"}>
-//         <button className="editBtn">signup</button>
-//       </Link>
-//       <Link href={"auth/login"}>
-//         <button className="editBtn">login</button>
-//       </Link>
-//     </div>
-//   );
-// };
-
-// export default PostList;
-
-// 111@gmail.com

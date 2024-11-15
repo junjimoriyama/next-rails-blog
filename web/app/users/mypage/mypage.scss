@@ -7,6 +7,14 @@
   align-items: center;
   gap: 10px;
 
+  .followingsCount, .followerCount {
+    cursor: pointer;
+    transition: 0.3s;
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+
   input[type="file"] {
     display: none;
   }
@@ -29,28 +37,23 @@
     cursor: pointer;
     border-radius: 4px;
     margin-bottom: 10px;
-  }
+    transition: .3s;
 
-  .avatarUpdateBtn {
-    width: 150px;
-    padding: 5px;
-    background-color: navy;
-    color: #fff;
-    border-radius: 4px;
-    cursor: pointer;
-    
+    &:hover {
+      opacity: 0.5;
+    }
   }
 
   .fromPostToTopBtn {
     width: 150px;
     height: 30px;
-    background-color: navy;
+    background-color: #2d4a32;
     border-radius: 5px;
-    transition: .3s;
     cursor: pointer;
+    transition: .3s;
 
     &:hover {
-      opacity: 0.7;
+      opacity: 0.5;
     }
   }
 }

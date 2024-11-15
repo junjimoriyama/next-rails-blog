@@ -35,7 +35,7 @@
   .loginBtn {
     width: 300px;
     height: 30px;
-    background-color: navy;
+    background-color: rgb(45, 45, 74);
     border-radius: 5px;
     font-size: 20px;
     transition: .3s;
@@ -43,7 +43,7 @@
     cursor: pointer;
 
     &:hover {
-      opacity: 0.7;
+      opacity: 0.5;
     }
   }
 
@@ -65,6 +65,10 @@
       transition: .3s;
       margin-bottom: 20px; 
       cursor: pointer;
+      
+      &:hover {
+        opacity: 0.5;
+      }
     }
   }
 }

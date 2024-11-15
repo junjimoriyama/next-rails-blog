@@ -1,32 +1,51 @@
 "use client";
 
-import { createPost } from "./actionCreate";
-
-import { CategoryProps } from "@/types";
-import { useEffect, useState } from "react";
-import "./create.scss";
+// next
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+// react
+import { useEffect, useState } from "react";
+// type
+import { CategoryProps } from "@/types";
+// component
 import { getCookie } from "@/app/components/functions/getCookies";
+// style
+import "./create.scss";
 
 export default function CreatePost() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("");
   const [categories, setCategories] = useState([]);
-
-  const { id } = useParams();
-
   const router = useRouter();
 
+  const token = getCookie('token') 
+  const headers = {
+    "Authorization": `Bearer ${token}`,
+    "Content-Type": "application/json",
+  };
+
+  useEffect(() => {
+    // カテゴリー取得
+    const fetchCategories = async () => {
+      const res = await fetch("http://localhost:3000/api/v1/categories");
+      const categoriesData = await res.json();
+      setCategories(categoriesData);
+    };
+    fetchCategories();
+  }, []);
+
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault(); // ページリロードを防ぐ
+    createPost(); // ログイン関数を呼び出す
+  };
+
+  // ポスト作成
   const createPost = async () => {
-    const token = getCookie("token");
     const res = await fetch("http://localhost:3000/api/v1/posts", {
       method: "POST",
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify({
         post: {
           title: title,
@@ -34,31 +53,15 @@ export default function CreatePost() {
           category_id: category,
         },
       }),
+      credentials: "include" 
     });
     if (res.ok) {
       router.push("/posts");
       // 新しく作成した投稿を即時反映
-      router.refresh(); 
+      router.refresh();
     } else {
-      const errorData = await res.json();
-      console.error("APIエラー:", errorData);
-      throw new Error("失敗しました");
+      throw new Error("ポスト作成に失敗しました");
     }
-  };
-
-  useEffect(() => {
-    const getCategories = async () => {
-      const res = await fetch("http://localhost:3000/api/v1/categories", {
-      });
-      const categoriesData = await res.json();
-      setCategories(categoriesData);
-    };
-    getCategories();
-  }, []);
-
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // ページリロードを防ぐ
-    createPost(); // ログイン関数を呼び出す
   };
 
   return (
@@ -75,12 +78,10 @@ export default function CreatePost() {
           name="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          // onChange={handleTitleChange}
         />
         <label>内容:</label>
         <textarea
           onChange={(e) => setContent(e.target.value)}
-          // onChange={handleContentChange}
           name="content"
           value={content}
         />
@@ -107,6 +108,9 @@ export default function CreatePost() {
         <button className="submitBtn" type="submit">
           送信
         </button>
+        <Link href="/posts">
+          <button className="BackToPostsBtn">戻る</button>
+        </Link>
       </form>
     </div>
   );

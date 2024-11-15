@@ -4,21 +4,18 @@ class Api::V1::PostsController < ApplicationController
   before_action :authenticate # 全アクションに適用
 
   def index
-    posts = Post.includes(:category).all.map do |post|
-      # postオブジェクトの属性を全て取得
-      post_data = post.attributes # attributesを使用
-
-      # Rails.logger.info("indexのpost_data#{post_data}")      
+    sort_order = params[:sort_order] == 'asc' ? :asc : :desc
+    @posts = Post.includes(:category)
+                .order(created_at: sort_order)
+                .map do |post|
+      post_data = post.attributes      
       post_data[:favorites] = @current_user.already_favorited?(post)
       post_data[:category] = post.category.name
       post_data
     end
-    render json: {
-      posts: posts,
-      current_user: @current_user.as_json(only: [:id, :email]),
-    }
+    render json: @posts
   end
-
+  
   def show
     @post = Post.find(params[:id])
     post_data = @post.attributes

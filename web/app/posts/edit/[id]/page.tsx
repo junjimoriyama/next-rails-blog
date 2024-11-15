@@ -1,14 +1,17 @@
 "use client";
 
-import { CategoryProps, editPostData } from "@/types";
-import { useEffect, useState } from "react";
-import { editPost } from "./actionEdit";
+// next
 import { useParams } from "next/navigation";
-import "./edit.scss";
 import Link from "next/link";
+// react
+import { useEffect, useState } from "react";
+// type
+import { CategoryProps, editPostData } from "@/types";
+// component
+import { editPost } from "./actionEdit";
 import { getCookie } from "@/app/components/functions/getCookies";
-
-// import { createPost } from "./actionEdit";
+// style
+import "./edit.scss";
 
 
 export default function EditPost() {
@@ -18,31 +21,32 @@ export default function EditPost() {
   const [categoryData, setCategoryData] = useState<number | null>(null);  
   const [ categories, setCategories ] = useState([])
 
+  const token = getCookie('token') 
+
   // id取得
   const { id } = useParams()
 
   useEffect(() => {
-    const getPosts = async() => {
-      const token = getCookie('token')
+    // 編集用ポストデータ反映
+    const fetchPostData = async() => {
       const res = await fetch(`http://localhost:3000/api/v1/posts/${id}`, {
         headers: {
           'Authorization': `Bearer ${token}`,
         }
       });
-      const data = await res.json()
-      setTitle(data.post.title)
-      setContent(data.post.content)
-      setCategoryData(data.post.category_id)
+      const postsData = await res.json()
+      setTitle(postsData.post.title)
+      setContent(postsData.post.content)
+      setCategoryData(postsData.post.category_id)
     }
-    getPosts()
-
-    const getCategories = async() => {
-      const res = await  fetch(`http://localhost:3000/api/v1/categories/`, {
-      });
-      const data = await res.json()
-      setCategories(data)
+    fetchPostData()
+    // カテゴリー取得
+    const fetchCategories = async() => {
+      const res = await  fetch("http://localhost:3000/api/v1/categories/");
+      const categoriesData = await res.json()
+      setCategories(categoriesData)
     }
-    getCategories()
+    fetchCategories()
   }, [])
 
   return (

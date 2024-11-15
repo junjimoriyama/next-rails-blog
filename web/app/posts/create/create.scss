@@ -36,12 +36,23 @@
         gap: 5px;
       }
     }
-    .submitBtn {
+    .submitBtn, .BackToPostsBtn {
       width: 300px;
       height: 30px;
-      background-color: rgb(33, 33, 135);
       border-radius: 5px;
-      font-size: 20px;
+      transition: .3s;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.5;
+      }
+    }
+    .submitBtn {
+      background-color: rgb(45, 45, 74);
+      margin-bottom: 10px;
+    }
+    .BackToPostsBtn {
+      background-color: #2d4a32;
     }
   }
 }

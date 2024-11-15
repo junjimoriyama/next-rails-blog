@@ -8,20 +8,27 @@ class User < ApplicationRecord
   # ファイルアップロードが可能
   has_one_attached :avatar
 
-  # ユーザーが「フォローしている関係」を Relationship モデルを通じて管理し、following_idを外部キーとして関連付けています。
-  # active_relationshipsはユーザーが「フォローしている関係」を表すアソシエーション
-  # フォローする側からhas_manyリレーションシップが伸びる
-  has_many :relationships, class_name: "Relationship",foreign_key: :following_id
+  # following_idを外部キーとしてrelationshipsと関連づける
+  has_many :relationships, foreign_key: :following_id
+  # Userインスタンスのfollowingsメソッドを呼び出すと、relationships テーブルを介して follower に関連する User レコードを取得できる
   has_many :followings, through: :relationships, source: :follower
 
-  # フォローされる側からhas_manyリレーションシップが伸びる
   has_many :reverse_of_relationships, class_name: "Relationship", foreign_key: :follower_id
   has_many :followers, through: :reverse_of_relationships, source: :following
-
 
   def already_favorited?(post)
     self.favorites.exists?(post_id: post.id)
   end
+
+
+  # app/controllers/api/v1/users_controller.rb
+
+# def is_followed
+#   user = User.find(params[:id])
+#   is_followed = user.is_followed_by?(@current_user)
+#   render json: { is_followed: is_followed }
+# end
+
   # validate :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   # validates :password, length: { minimum: 6 }, if: -> { new_record? || !password.nil? }
   #
@@ -30,3 +37,4 @@ class User < ApplicationRecord
   # 例）:latと:lngのカラムの組み合わせでユニークかチェックする場合
   # validates :lat, uniqueness: { scope: :lng }
 end
+

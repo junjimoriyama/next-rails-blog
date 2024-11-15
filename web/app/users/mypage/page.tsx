@@ -1,139 +1,118 @@
 "use client";
 
-import { getCookie } from "@/app/components/functions/getCookies";
-import { useParams } from "next/navigation";
-import React, { ChangeEvent, use, useEffect, useState } from "react";
-
-import "./user.scss";
+// next
 import Link from "next/link";
+// react
+import React, { ChangeEvent, useEffect, useState } from "react";
+// component
+import { getCookie } from "@/app/components/functions/getCookies";
+// style
+import "./mypage.scss";
+
 
 const user = () => {
   // idを取得
-  const params = useParams();
-  const token = getCookie('token')
+  const token = getCookie("token");
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  };
 
   // 名前
   const [userId, setUserId] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  // const [avatar, setAvatar] = useState<File | null>(null);
   const [avatarUrl, setAvatarUrl] = useState("");
 
   const [followingsCount, setFollowingsCount] = useState(0);
   const [followersCount, setFollowersCount] = useState(0);
 
+  // テータ取得関数
+  const fetchData = async (url: string, method: string) => {
+    const res = await fetch(url, { method: method, headers, credentials: "include" });
+    if (res.ok) {
+      return res.json();
+    } else {
+      throw new Error("データ取得に失敗");
+    }
+  };
+
   useEffect(() => {
-    const fetchUserData = async () => {
-      const token = getCookie("token");
-      const res = await fetch(`http://localhost:3000/api/v1/users/me`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        setUserId(data.user.id);
-        setUsername(data.user.username);
-        setEmail(data.user.email);
-        setAvatarUrl(data.user.avatarUrl);
-      }
+    // 全てのデータを取得
+    const allFetchData = async () => {
+
+      // ユーザーデータ取得
+      const fetchUserDataRes = await fetchData(
+        "http://localhost:3000/api/v1/users/me",
+        "GET"
+      );
+      setUserId(fetchUserDataRes.id);
+      setUsername(fetchUserDataRes.username);
+      setEmail(fetchUserDataRes.email);
+      setAvatarUrl(fetchUserDataRes.avatarUrl);
+
+      // フォローしている人の取得
+      const fetchFollowingsData = await fetchData(
+        "http://localhost:3000/api/v1/users/followings",
+        "GET"
+      );
+      setFollowingsCount(fetchFollowingsData.length);
+      // フォロアーされている人の取得
+      const fetchFollowersData = await fetchData(
+        "http://localhost:3000/api/v1/users/followers",
+        "GET"
+      );
+      setFollowersCount(fetchFollowersData.length); 
     };
-    fetchUserData();
+    allFetchData();
   }, []);
+
 
   const avatarUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
 
-    if (!files || files.length === 0) return;
     // filesがnullか空かをチェック
-
+    if (!files || files.length === 0) return;
     // ファイルを取得
     const file = files[0];
-
     // 一時URLの生成
     setAvatarUrl(URL.createObjectURL(file));
-
-    const token = getCookie("token");
 
     const formData = new FormData();
     formData.append("avatar", file); // ここで直接fileをformDataに追加
 
-    const res = await fetch(`http://localhost:3000/api/v1/users/${userId}
-      `, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
+    const res = await fetch(
+      `http://localhost:3000/api/v1/users/${userId}
+      `,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      }
+    );
 
     if (res.ok) {
       const data = await res.json();
-      console.log("アップロード後のデータ:", data);
       setAvatarUrl(data.avatarUrl); // サーバーのURLを最終的に設定
-    }
+    } 
 
     // 生成した一時URLを解放してメモリを確保
     URL.revokeObjectURL(avatarUrl);
   };
-
-  useEffect(() => {
-// userIdが取得できたら
-    if (userId) {
-      // フォローしている数を取得
-      const fetchFollowingsCount = async () => {
-        const res = await fetch(
-          `http://localhost:3000/api/v1/users/${userId}/followings`, {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (res.ok) {
-          const data = await res.json();
-          console.log('成功時の',data)
-          setFollowingsCount(data.length); // data が配列なら length で数を取得
-        } else {
-          const data = await res.json();
-          console.log('失敗時の',data)
-          console.log('失敗時の',res.status)
-        }
-      };
-  
-      // フォロワーの数を取得
-      const fetchFollowersCount = async () => {
-        const res = await fetch(
-          `http://localhost:3000/api/v1/users/${userId}/followers`, {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (res.ok) {
-          const data = await res.json();
-          setFollowersCount(data.length); // data が配列なら length で数を取得
-        }
-      };
-  
-      fetchFollowingsCount();
-      fetchFollowersCount();
-    }
-  }, [userId]);
-
 
   return (
     <div className="user">
       <p>{username}</p>
       <p>{email}</p>
       <div className="followInfo">
-        <p>フォロー数: {followingsCount}</p>
-        <p>フォロワー数: {followersCount}</p>
+        <Link href="/users/mypage/followings">
+          <p className="followingsCount">フォロー数: {followingsCount}</p>
+        </Link>
+        <Link href="/users/mypage/followers">
+          <p className="followerCount">フォロワー数: {followersCount}</p>
+        </Link>
       </div>
       {avatarUrl && <img className="avatarImg" src={avatarUrl} alt="" />}
 
@@ -154,91 +133,4 @@ const user = () => {
     </div>
   );
 };
-
 export default user;
-
-// "use client";
-
-// import { getCookie } from "@/app/components/functions/getCookies";
-// import { useParams } from "next/navigation";
-// import React, { ChangeEvent, use, useEffect, useState } from "react";
-
-// import "./user.scss";
-
-// const user = () => {
-//   // idを取得
-//   const params = useParams();
-
-//   // 名前
-//   const [username, setUsername] = useState("");
-//   const [email, setEmail] = useState("");
-//   const [avatar, setAvatar] = useState<File | null>(null);
-//   const [avatarUrl, setAvatarUrl] = useState<string>("");
-
-//   useEffect(() => {
-//     const fetchUserData = async () => {
-//       const token = getCookie("token");
-//       const res = await fetch(
-//         `http://localhost:3000/api/v1/users/${params.id}`,
-//         {
-//           method: "GET",
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//             "Content-Type": "application/json",
-//           },
-//         }
-//       );
-//       const data = await res.json();
-//       console.log("userのデータは", data);
-//       setUsername(data.user.username);
-//       setEmail(data.user.email);
-//       setAvatar(data.user.avatar);
-//       setAvatarUrl(data.user.avatarUrl);
-//     };
-//     fetchUserData();
-//   }, []);
-
-//   const handleSubmit = async () => {
-//     const token = getCookie("token");
-
-//     const formData = new FormData();
-//     if (avatar) {
-//       // アバターのデータ
-//       formData.append("avatar", avatar);
-//     }
-
-//     const res = await fetch(`http://localhost:3000/api/v1/users/${params.id}`, {
-//       method: "PUT",
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//       },
-//       body: formData,
-//     });
-
-//     console.log("profileのformData", formData);
-
-//     if (res.ok) {
-//       const data = await res.json();
-//       setAvatarUrl(data.avatarUrl);
-//     }
-//   };
-
-//   return (
-//     <div className="user">
-//       <p>{username}</p>
-//       <p>{email}</p>
-//       <input
-//         type="file"
-//         onChange={(e) => {
-//           if (e.target.files) {
-//             setAvatar(e.target.files[0]);
-//           }
-//         }}
-//       />
-//       <button onClick={handleSubmit}>更新</button>
-//       <img className="avatar" src={avatarUrl} alt="" />
-//     </div>
-//   );
-// };
-
-// export default user;

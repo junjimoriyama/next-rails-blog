@@ -1,0 +1,15 @@
+.deleteBtn {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 30px;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: rgb(157, 31, 31);
+  transition: .3s;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.5;
+  }
+}
