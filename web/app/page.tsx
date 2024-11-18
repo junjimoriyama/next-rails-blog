@@ -7,7 +7,6 @@ export default function Home() {
   redirect('/auth/login')
   return (
     <div className="home">
-    {/* <PostList /> */}
     </div>
   );
 }

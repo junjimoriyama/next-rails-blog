@@ -41,8 +41,6 @@ class ApplicationController < ActionController::API
       @current_user = User.find(decode_token[0]["user_id"])
       # render json: @current_user
 
-      Rails.logger.info "現在のユーザーは: #{@current_user.inspect}"
-
       # ユーザーIDに対応するユーザーがデータベースに存在しない場合
     rescue ActiveRecord::RecordNotFound
       render_unauthorized
@@ -65,3 +63,61 @@ end
 # フロントエンドはそのトークンをクッキーに保存します（cookieStore.set で）。
 # 次回以降、リクエストを送信する際、ブラウザは保存していたクッキーのトークンを使い、そのトークンをAuthorizationヘッダーにセットして、サーバーに送信します。
 # サーバーはそのAuthorizationヘッダーを使ってトークンを検証し、ユーザーが認証済みかどうかを確認します。
+
+
+# class ApplicationController < ActionController::API
+#   include ActionController::Cookies
+
+#   # JWTトークンを生成
+#   def create_token(user_id)
+#     payload = {
+#       user_id: user_id,
+#       exp: 24.hours.from_now.to_i # トークンの有効期限（24時間後）
+#     }
+#     secret_key = Rails.application.credentials.secret_key_base
+#     JWT.encode(payload, secret_key)
+#   end
+
+#   # 認証処理
+#   def authenticate
+#     token = extract_token_from_header
+
+#     if token.blank?
+#       render_unauthorized("トークンがありません")
+#       return
+#     end
+
+#     begin
+#       # トークンをデコードしてユーザーを認証
+#       decoded_token = decode_token(token)
+#       @current_user = User.find(decoded_token["user_id"])
+#       Rails.logger.info "現在のユーザー: #{@current_user.inspect}"
+#     rescue ActiveRecord::RecordNotFound
+#       render_unauthorized("無効なユーザーです")
+#     rescue JWT::ExpiredSignature
+#       render_unauthorized("トークンの有効期限が切れています")
+#     rescue JWT::DecodeError
+#       render_unauthorized("トークンのデコードに失敗しました")
+#     end
+#   end
+
+#   private
+
+#   # Authorizationヘッダーからトークンを抽出
+#   def extract_token_from_header
+#     auth_header = request.headers['Authorization']
+#     auth_header.present? ? auth_header.split(' ').last : nil
+#   end
+
+#   # トークンをデコード
+#   def decode_token(token)
+#     secret_key = Rails.application.credentials.secret_key_base
+#     decoded_array = JWT.decode(token, secret_key)
+#     decoded_array.first # ペイロード部分を返す
+#   end
+
+#   # 認証失敗時のレスポンス
+#   def render_unauthorized(message = "アクセス許可されていません")
+#     render json: { error: message }, status: :unauthorized
+#   end
+# end

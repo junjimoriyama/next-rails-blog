@@ -1,22 +1,55 @@
 "use client";
-
-import Modal from "@/app/components/elements/modal/Modal";
+// next
 import { signupUser } from "./actionSignup";
+// react
+import { ModalContext } from "@/app/components/functions/ModalContext";
+import { toast, ToastContainer } from "react-toastify";
+// components
+import SignupSuccessModal from "./modal/SignupSuccessModal";
+// style
+import "react-toastify/dist/ReactToastify.css";
 import "./signup.scss";
 
-import React, { ChangeEvent, useState, FormEvent } from "react";
-import SignupSuccessModal from "./modal/SignupSuccessModal";
+import React, { ChangeEvent, useState, FormEvent, useContext } from "react";
 
-const login = () => {
+const signup = () => {
 
   const [ username, setUsername ] = useState('')
   const [ email, setEmail ] = useState('')
   const [ password, setPassword ] = useState('')
   const [ passwordConf, setPasswordConf  ] = useState('')
-  const [ isOpen, setIsOpen] = useState(false);
+  const { isModalOpen, setIsModalOpen} = useContext(ModalContext)
 
   const onSubmit = async(e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    
+
+    if(!username || !email || !password || !passwordConf) {
+      toast.error('全てのフォームに入力してください。', {
+        position: 'top-center',
+        autoClose: 5000,
+      })
+      return
+    }
+
+    const showToast = (errorMessage:string) => {
+      toast.error(errorMessage, {
+        position: 'top-center',
+        autoClose: 5000,
+      })
+    }
+
+    // if(!username.match(/^[\w\x01-\x7E]+$/)) {
+    //   showToast('名前を正しく入力してください。')
+    //   return
+    if (!email.match(/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)){
+      showToast('メールアドレスを正しく入力してください。')
+      return
+    } else if (!password.match(/^[a-zA-Z\d]{6,}$/)) {
+      showToast('パスワードを正しく入力してください。')
+      return
+    }
+
 
     // formデータ全体取得
     const formData = new FormData(e.currentTarget);
@@ -24,12 +57,12 @@ const login = () => {
     const result =  await signupUser(formData)
     // 成功したら
     if(result.success) {
-      setIsOpen(true)
+      setIsModalOpen(true)
     } 
   }
   
   return (
-    <div className="login">
+    <div className="signup">
       <h1>サインアップ</h1>
       <form onSubmit={onSubmit}>
         <label htmlFor="username">
@@ -55,7 +88,7 @@ const login = () => {
           />
         </label>
         <label htmlFor="password">
-          パスワード
+          パスワード (6桁の半角英数)
         <input
         className="password" 
         type="password" 
@@ -73,22 +106,19 @@ const login = () => {
           id="passwordConf" 
           name="passwordConf"
           value={passwordConf}
-          // autoComplete="new-password"
           onChange={(e: ChangeEvent<HTMLInputElement>) => setPasswordConf(e.target.value)}
           />
         </label>
 
-        <button className="signUpBtn" type='submit'>送信</button>
-
-        <SignupSuccessModal 
-        isOpen={isOpen} setIsOpen={() => setIsOpen(false)} 
-        />
+        <button className="signUpBtn" type='submit'>登録</button>
+        <SignupSuccessModal />
       </form>
+      <ToastContainer />
     </div>
   );
 };
 
-export default login;
+export default signup;
 // "use client";
 
 // import { signupUser } from "./actionSignup";

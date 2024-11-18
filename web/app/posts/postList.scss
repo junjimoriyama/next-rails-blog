@@ -38,19 +38,22 @@
       width: 600px;
       padding: 10px;
       border: 1px solid #fff;
-      .userHeader {
-        display: flex;
-        gap: 10px;
-        transition: 0.3s;
-
-        &:hover {
-          opacity: 0.5;
-        }
-        .avatarImg {
-          width: 30px;
-          aspect-ratio: 1/1;
-          border-radius: 50%;
-          object-fit: cover;
+      .postItemLink {
+        width: fit-content;
+        .userHeader {
+          display: flex;
+          gap: 10px;
+          transition: 0.3s;
+  
+          &:hover {
+            opacity: 0.5;
+          }
+          .avatarImg {
+            width: 30px;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            object-fit: cover;
+          }
         }
       }
       .favoritesCount {

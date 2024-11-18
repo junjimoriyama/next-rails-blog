@@ -1,29 +1,35 @@
 "use client";
 
-// next
-import Link from "next/link";
+// react
+import React, { ReactNode, useContext } from "react";
+// components
+import { ModalContext } from "../../functions/ModalContext";
 // style
 import "./modal.scss";
-import { useState } from "react";
 
-import { ReactNode } from "react";
+const Modal = ({ children }: { children: ReactNode }) => {
+  const { isModalOpen, setIsModalOpen, showCloseButton, setShowCloseButton } =
+    useContext(ModalContext);
 
-const Modal = ({children, isOpen, handleClose}: {children: ReactNode, isOpen: boolean, handleClose:() => void}) => {
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
-  if(!isOpen) return null
-
-  // const handleCloseModal = () => {
-  //   setIsOpen(false);
-  // };
   return (
     <>
-      {isOpen && (
+      {isModalOpen && (
         <>
-          <div className="modalMask" onClick={handleClose}></div>
+          {showCloseButton ? (
+            <div className="modalMask" onClick={handleCloseModal}></div>
+          ) : (
+            <div className="modalMask"></div>
+          )}
           <div className="modal">
-            <button className="modalCloseBtn" onClick={handleClose}>
-              ×
-            </button>
+            {showCloseButton && 
+              <button className="modalCloseBtn" onClick={handleCloseModal}>
+                ×
+              </button>
+            }
             {children}
           </div>
         </>
@@ -33,3 +39,38 @@ const Modal = ({children, isOpen, handleClose}: {children: ReactNode, isOpen: bo
 };
 
 export default Modal;
+
+// "use client";
+
+// // next
+// import Link from "next/link";
+// // style
+// import "./modal.scss";
+// import { ReactNode, useContext, useState } from "react";
+
+// import ModalContext from "../../functions/ModalContext";
+
+// const Modal = ({children}: {children: ReactNode}) => {
+
+//   const { isOpen, setIsOpen } = useContext(ModalContext);
+//   const handleCloseModal = () => {
+//     setIsOpen(false);
+//   };
+//   return (
+//     <>
+//       {isOpen && (
+//         <>
+//           <div className="modalMask" onClick={handleCloseModal}></div>
+//           <div className="modal">
+//             <button className="modalCloseBtn" onClick={handleCloseModal}>
+//               ×
+//             </button>
+//             {children}
+//           </div>
+//         </>
+//       )}
+//     </>
+//   );
+// };
+
+// export default Modal;

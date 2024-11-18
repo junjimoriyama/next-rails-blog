@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 // type
 import { CategoryProps, editPostData } from "@/types";
-// component
+// components
 import { editPost } from "./actionEdit";
 import { getCookie } from "@/app/components/functions/getCookies";
 // style

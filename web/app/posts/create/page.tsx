@@ -1,14 +1,13 @@
 "use client";
 
 // next
-import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 // react
 import { useEffect, useState } from "react";
 // type
 import { CategoryProps } from "@/types";
-// component
+// components
 import { getCookie } from "@/app/components/functions/getCookies";
 // style
 import "./create.scss";

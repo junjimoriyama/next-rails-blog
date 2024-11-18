@@ -4,7 +4,7 @@
 import Link from "next/link";
 // react
 import { useEffect, useState } from "react";
-// component
+// components
 import FollowBtn from "@/app/components/elements/follow/FollowBtn";
 // cookies
 import { getCookie } from "@/app/components/functions/getCookies";
@@ -52,13 +52,16 @@ const FollowingsPage = () => {
   return (
     <div className="mypage_followings">
       <div className="followingsList">
-        {followingUsers.map((user) => (
+        {
+         followingUsers.length !== 0 ? followingUsers.map((user) => (
           <ul key={user.id} className="followingsItems">
             {user.avatarUrl && <img className="avatarImg" src={user.avatarUrl} alt="" />}
             <li>{user.username}</li>
             <FollowBtn userId={user.id} />
           </ul>
-        ))}
+        ))
+        : <p>フォローしている人はいません。</p>
+      }
       </div>
       <Link href="/users/mypage">
         <div className="BackToMypage">マイページに戻る</div>

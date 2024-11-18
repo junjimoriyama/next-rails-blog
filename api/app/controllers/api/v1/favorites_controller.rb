@@ -1,6 +1,7 @@
 class Api::V1::FavoritesController < ApplicationController
   before_action :authenticate
 
+
   def create
     # 現在ログインしているユーザーが、特定の投稿に対して新しい「いいね」を作成して、それをデータベースに保存する
     @favorite = @current_user.favorites.create(post_id: params[:post_id])

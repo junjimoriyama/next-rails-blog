@@ -47,7 +47,20 @@
   .fromPostToTopBtn {
     width: 150px;
     height: 30px;
+    margin-bottom: 20px;
     background-color: #2d4a32;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: .3s;
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+  .confirmedWithdrawBtn {
+    width: 150px;
+    height: 30px;
+    background-color: rgb(157, 31, 31);
     border-radius: 5px;
     cursor: pointer;
     transition: .3s;

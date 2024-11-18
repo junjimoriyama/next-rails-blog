@@ -3,18 +3,19 @@
 // next
 import Link from "next/link";
 // react
-import React, { ChangeEvent, useEffect, useState } from "react";
-// component
+import React, { ChangeEvent, useContext, useEffect, useState } from "react";
+// function
 import { getCookie } from "@/app/components/functions/getCookies";
 // style
 import "./mypage.scss";
-
+import { ModalContext } from "@/app/components/functions/ModalContext";
+import WithdrawModal from "./modal/WithdrawModal";
 
 const user = () => {
   // idを取得
   const token = getCookie("token");
   const headers = {
-    Authorization: `Bearer ${token}`,
+    "Authorization": `Bearer ${token}`,
     "Content-Type": "application/json",
   };
 
@@ -27,9 +28,15 @@ const user = () => {
   const [followingsCount, setFollowingsCount] = useState(0);
   const [followersCount, setFollowersCount] = useState(0);
 
+  const { isModalOpen, setIsModalOpen } = useContext(ModalContext);
+
   // テータ取得関数
   const fetchData = async (url: string, method: string) => {
-    const res = await fetch(url, { method: method, headers, credentials: "include" });
+    const res = await fetch(url, {
+      method: method,
+      headers,
+      credentials: "include",
+    });
     if (res.ok) {
       return res.json();
     } else {
@@ -40,7 +47,6 @@ const user = () => {
   useEffect(() => {
     // 全てのデータを取得
     const allFetchData = async () => {
-
       // ユーザーデータ取得
       const fetchUserDataRes = await fetchData(
         "http://localhost:3000/api/v1/users/me",
@@ -62,11 +68,10 @@ const user = () => {
         "http://localhost:3000/api/v1/users/followers",
         "GET"
       );
-      setFollowersCount(fetchFollowersData.length); 
+      setFollowersCount(fetchFollowersData.length);
     };
     allFetchData();
   }, []);
-
 
   const avatarUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -96,11 +101,15 @@ const user = () => {
     if (res.ok) {
       const data = await res.json();
       setAvatarUrl(data.avatarUrl); // サーバーのURLを最終的に設定
-    } 
+    }
 
     // 生成した一時URLを解放してメモリを確保
     URL.revokeObjectURL(avatarUrl);
   };
+
+  const handleWithdrawModal = () => {
+    setIsModalOpen(true)
+  }
 
   return (
     <div className="user">
@@ -130,6 +139,14 @@ const user = () => {
       <Link href="/posts">
         <button className="fromPostToTopBtn">戻る</button>
       </Link>
+
+        <button 
+        className="confirmedWithdrawBtn"
+        onClick={handleWithdrawModal}
+        >退会に進む
+        </button>
+
+        <WithdrawModal />
     </div>
   );
 };

@@ -1,0 +1,21 @@
+.deleteUser {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  .goToLoginBtn {
+    width: 150px;
+    height: 30px;
+    background-color: #2d4a32;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+}

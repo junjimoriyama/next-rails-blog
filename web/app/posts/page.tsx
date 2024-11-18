@@ -1,17 +1,17 @@
 // next
 import Link from "next/link";
+import { redirect } from "next/navigation";
 // type
 import { postProps } from "@/types";
-// component
+// components
 import Header from "../components/layouts/header/Header";
 import Favorite from "../components/elements/favorite/Favorite";
 import DeleteBtn from "./delete/DeleteBtn";
 // cookies
-import { cookies, headers } from "next/headers";
+import { cookies } from "next/headers";
 // style
 import "./postList.scss";
 import Avatar from "./components/Avatar";
-import SortBtn from "./components/sortBtn/SortBtn";
 
 export const PostList = async () => {
   const cookieStore = cookies();
@@ -27,7 +27,7 @@ export const PostList = async () => {
     if (res.ok) {
       return res.json();
     } else {
-      throw new Error("データ取得に失敗しました");
+      redirect(`/`);
     }
   };
 
@@ -60,7 +60,7 @@ export const PostList = async () => {
 
           return (
             <li key={post.id} className="postItem">
-              <Link href={`users/${post.user_id}`}>
+              <Link className='postItemLink' href={`users/${post.user_id}`}>
                 <div className="userHeader">
                   <Avatar userId={post.user_id} />
                   <p className="username">

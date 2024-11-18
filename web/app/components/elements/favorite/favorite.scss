@@ -14,4 +14,12 @@
       }
     }
   }
+  .favoriteMark {
+    transition: .3s;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
 }

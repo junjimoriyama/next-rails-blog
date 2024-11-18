@@ -10,7 +10,7 @@ class Api::V1::UsersController < ApplicationController
           id: user.id,
           username: user.username,
           email: user.email,
-          avatarUrl: user.avatar.attached? ? url_for(user.avatar) : nil,
+          avatarUrl: user.avatar.attached? ? url_for(user.avatar) : default_avatar_url,
           # created_at: user.created_at
         }
       }
@@ -19,7 +19,6 @@ class Api::V1::UsersController < ApplicationController
     end
   end
   
-
   def create
     @user = User.new(user_params)
     if @user.save
@@ -29,72 +28,82 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
-def show
-  @user = User.find(params[:id])
-  if @user.present?
-    render json: {
-      id: @user.id,
-      username: @user.username,
-      email: @user.email,
-      avatarUrl: @user.avatar.attached? ? url_for(@user.avatar) : nil 
-    }
-  end
-end
-  
-def update
-  @user = User.find(params[:id])
-  if params[:avatar].present?
-    @user.avatar.attach(params[:avatar])
-    render json: {avatarUrl: url_for( @user.avatar)}, status: :ok
-  else
-    render json: {error: "アバターの更新はできませんでした"}, status: :unprocessable_entity
-  end
-end
 
-# 現在のユーザー取得
-def me
-  if @current_user
-    render json: {
-      id:  @current_user.id,
-      username:  @current_user.username,
-      email:  @current_user.email,
-      avatarUrl: @current_user.avatar.attached? ? url_for(@current_user.avatar) : nil
+  def show
+    @user = User.find(params[:id])
+    if @user.present?
+      render json: {
+        id: @user.id,
+        username: @user.username,
+        email: @user.email,
+        avatarUrl: @user.avatar.attached? ? url_for(@user.avatar) : default_avatar_url 
       }
+    end
   end
-end
-
-# フォローしているユーザー全員取得
-def followings
-  followingsUser =  @current_user.followings.map do |user|
-    # image_urlにアバターのURLを格納できる
-    # image_url = user.avatar.attached? ? url_for(user.avatar) : nil
-    # 新しいオブジェクト(ハッシュ)を返す
-    {
-      id: user.id,
-      username: user.username,
-      avatarUrl: user.avatar.attached? ? url_for(user.avatar) : nil
-    }
+    
+  def update
+    @user = User.find(params[:id])
+    if params[:avatar].present?
+      @user.avatar.attach(params[:avatar])
+      render json: {avatarUrl: url_for( @user.avatar)}, status: :ok
+    else
+      render json: {error: "アバターの更新はできませんでした"}, status: :unprocessable_entity
+    end
   end
-  render json: followingsUser
-end
 
-# フォローされているユーザー全員取得
-def followers
-  followerUsers = @current_user.followers.map { |user|
-    {
-      id: user.id,
-      username: user.username,
-      avatarUrl: user.avatar.attached? ? url_for(user.avatar) : nil
+  def destroy
+    @current_user.destroy
+  end
+
+  # 現在のユーザー取得
+  def me
+    if @current_user
+      render json: {
+        id:  @current_user.id,
+        username:  @current_user.username,
+        email:  @current_user.email,
+        avatarUrl: @current_user.avatar.attached? ? url_for(@current_user.avatar) : default_avatar_url
+        }
+    end
+  end
+
+  # フォローしているユーザー全員取得
+  def followings
+    followingsUser =  @current_user.followings.map do |user|
+      # image_urlにアバターのURLを格納できる
+      # image_url = user.avatar.attached? ? url_for(user.avatar) : nil
+      # 新しいオブジェクト(ハッシュ)を返す
+      {
+        id: user.id,
+        username: user.username,
+        avatarUrl: user.avatar.attached? ? url_for(user.avatar) : default_avatar_url
+      }
+    end
+    render json: followingsUser
+  end
+
+  # フォローされているユーザー全員取得
+  def followers
+    followerUsers = @current_user.followers.map { |user|
+      {
+        id: user.id,
+        username: user.username,
+        avatarUrl: user.avatar.attached? ? url_for(user.avatar) : default_avatar_url
+      }
     }
-  }
-  render json: followerUsers
-end
+    render json: followerUsers
+  end
 
-# パラメーターの設定
-private
-def user_params
-  params.require(:user).permit(:username, :email, :password, :password_confirmation, :avatar)
-end
+  # デフォルトのアバター
+  def default_avatar_url
+    "#{request.base_url}/images/default_avatar.png"
+  end
+
+  # パラメーターの設定
+  private
+  def user_params
+    params.require(:user).permit(:username, :email, :password, :password_confirmation, :avatar)
+  end
 end
 
 

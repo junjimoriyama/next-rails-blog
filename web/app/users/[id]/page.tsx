@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 // cookies
 import { getCookie } from "@/app/components/functions/getCookies";
-// component
+// components
 import FollowBtn from "@/app/components/elements/follow/FollowBtn";
 // style
 import "./user.scss";

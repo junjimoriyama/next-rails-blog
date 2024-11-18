@@ -2,7 +2,7 @@
 
 // react
 import { useEffect, useState } from "react";
-// component
+// components
 import { getCookie } from "../../functions/getCookies";
 // style
 import "./followBtn.scss";

@@ -27,3 +27,10 @@ export interface editPostData {
   content: string;
   category_id: number;
 }
+
+// favorite: いいね機能のデータ構造
+export interface FavoriteProps {
+  postId: number;
+  postFavoritesCount: number;
+  initialFavorite: boolean;
+};

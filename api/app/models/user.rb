@@ -6,14 +6,14 @@ class User < ApplicationRecord
   # 1人のユーザーは複数の投稿を持つ。ユーザーが削除された投稿も削除する
   has_many :favorites, dependent: :destroy
   # ファイルアップロードが可能
-  has_one_attached :avatar
+  has_one_attached :avatar, dependent: :purge_later
 
   # following_idを外部キーとしてrelationshipsと関連づける
-  has_many :relationships, foreign_key: :following_id
+  has_many :relationships, foreign_key: :following_id, dependent: :destroy
   # Userインスタンスのfollowingsメソッドを呼び出すと、relationships テーブルを介して follower に関連する User レコードを取得できる
   has_many :followings, through: :relationships, source: :follower
 
-  has_many :reverse_of_relationships, class_name: "Relationship", foreign_key: :follower_id
+  has_many :reverse_of_relationships, class_name: "Relationship", foreign_key: :follower_id, dependent: :destroy
   has_many :followers, through: :reverse_of_relationships, source: :following
 
   def already_favorited?(post)
