@@ -10,7 +10,7 @@ import "./followBtn.scss";
 const Follow = ({ userId }: { userId: Number }) => {
   const token = getCookie("token");
 
-  const [isFollow, setIsFollow] = useState(false);
+  const [isFollow, setIsFollow] = useState(true);
 
   const headers = {
     Authorization: `Bearer ${token}`,
@@ -82,3 +82,5 @@ const Follow = ({ userId }: { userId: Number }) => {
 };
 
 export default Follow;
+
+// 画面によってデフォルト値を変える。フォロアーはfalseを初期値にする。

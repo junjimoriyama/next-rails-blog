@@ -4,7 +4,7 @@ import './level.scss'
 const level = () => {
   return (
     <div className='level'>
-      <p>level</p>
+      {/* <p>level</p> */}
       <LevelMark />
     </div>
   )

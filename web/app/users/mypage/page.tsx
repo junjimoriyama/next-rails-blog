@@ -73,6 +73,7 @@ const user = () => {
     allFetchData();
   }, []);
 
+  // 画像アップロード　/* ファイルサイズに制限を設ける(railsに専用の機能はない) */
   const avatarUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
 

@@ -5,4 +5,27 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
+  .LevelMark {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .boxes {
+      display: flex;
+      gap: 10px;
+      .box {
+        width: 30px;
+        height: 30px;
+        background-color: #fff;
+        border: 1px solid #000;
+        cursor: pointer;
+        // transition: .3s;
+
+        &.isActive {
+          background-color: pink;
+        }
+      }
+    }
+  }
 }
