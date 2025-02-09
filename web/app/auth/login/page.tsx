@@ -43,7 +43,8 @@ const login = () => {
 
   return (
     <div className="login">
-      <h1>ログイン</h1>
+      <h1 className="login_title">SIMPLE SNS</h1>
+      <h2 className="login_sub_title">ログイン</h2>
       <form onSubmit={onSubmit}>
         <label htmlFor="email">
           メールアドレス
